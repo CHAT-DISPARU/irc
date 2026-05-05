@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 11:17:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/05 11:29:44 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/05 19:41:36 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	Client::ClearBuff()
 	this->_buffer.erase();
 }
 
-void	Client::EarseLine(size_t pos)
+void	Client::EraseLine(size_t pos)
 {
 	this->_buffer.erase(0, pos);
 }

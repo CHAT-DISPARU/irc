@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/05 13:07:06 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/05 19:41:30 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
+
+bool	Server::signal = false;
+void	Server::SignalHandler(int signum)
+{
+	(void)signum;
+	std::cout << std::endl << "Signal recv" << std::endl;
+	Server::signal = true;
+}
 
 void	Server::SerSocket()
 {
@@ -33,9 +41,10 @@ void	Server::SerSocket()
 		throw (std::runtime_error("error : Socket listen"));
 }
 
-void	Server::ServerInit(int port)
+void	Server::ServerInit(int port, std::string password)
 {
 	this->port = port;
+	this->_password = password;
 	SerSocket();
 }
 
@@ -100,6 +109,17 @@ void	Server::ReceiveNewData(int fd)
 
 	std::cout << data;
 	this->clients[fd]->add_to_buff(data);
+
+	std::string buff = this->clients[fd]->get_buff();
+	size_t	pos = buff.find("\r\n");
+	while (pos != std::string::npos)
+	{
+		std::string line = buff.substr(0, pos);
+		this->clients[fd]->EraseLine(pos + 2);
+		this->_parser.Parse(this, this->clients[fd], line);
+		buff = this->clients[fd]->get_buff();
+		pos = buff.find("\r\n");
+	}
 }
 
 
@@ -111,10 +131,26 @@ void	Server::run(void)
 	pollfd_server.events = POLLIN;
 	this->pollfd.push_back(pollfd_server);
 	std::cout << "Waiting client ..." << std::endl;
-	while (1)
+	while (Server::signal == false)
 	{
+		for (size_t i = 0; i < pollfd.size(); i++)
+		{
+			if (pollfd[i].fd != fdsocket)
+			{
+				int	fd = pollfd[i].fd;
+				if (clients[fd]->hasDataToSend())
+					pollfd[i].events = POLLIN | POLLOUT; // lire et ecrire
+				else
+					pollfd[i].events = POLLIN; // que lre
+			}
+		}
 		if (poll(&pollfd[0], pollfd.size(), -1) == -1)
-			throw(std::runtime_error("poll() faild"));
+		{
+			if (Server::signal == false)
+				throw(std::runtime_error("poll() faild"));
+			else
+				return ;
+		}
 		for (size_t i = 0; i < pollfd.size(); i++)
 		{
 			if (pollfd[i].revents & POLLIN)
@@ -124,20 +160,50 @@ void	Server::run(void)
 				else
 					ReceiveNewData(pollfd[i].fd);
 			}
+			if (pollfd[i].revents & POLLOUT)
+				SendData(pollfd[i].fd);
 		}
 	}
 }
 
 Server::~Server()
 {
-	for (std::vector <struct pollfd>::iterator it = pollfd.begin(); it != pollfd.end(); it++)
+	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); it++)
 	{
-		delete clients[it->fd];
-		close(it->fd);
+		close(it->first);
+		delete it->second;
 	}
-	pollfd.erase(pollfd.begin(), pollfd.end());
-	if (clients.size() > 0)
-		clients.clear();
+	clients.clear();
+	pollfd.clear();
 	if (fdsocket != -1)
-		close (fdsocket);
+	{
+		close(fdsocket);
+		fdsocket = -1;
+	}
+}
+
+void	Server::sendReply(int fd, const std::string& code, const std::string& target, const std::string& message)
+{
+	// :<name_serv> <code_num> <target> :<explication>\r\n"
+	std::string full_msg = ":gajanvie.rolavale.irc " + code + " " + target + " " + message + "\r\n";
+	if (clients.find(fd) != clients.end())
+		clients[fd]->add_to_sendBuff(full_msg);
+}
+
+void	Server::SendData(int fd)
+{
+	Client*		client = clients[fd];
+	std::string	data = client->get_sendBuff();
+
+	ssize_t bytes_sent = send(fd, data.c_str(), data.length(), 0);
+	if (bytes_sent < 0)
+	{
+		// buffer os plein pas grave prochain poll
+		if (errno == EAGAIN || errno == EWOULDBLOCK)
+			return; 
+		std::cerr << "Erreur d'envoi au FD [" << fd << "]" << std::endl;
+		// faut deco le client
+	} 
+	else if (bytes_sent > 0)
+		client->erase_sendBuff(bytes_sent);
 }

@@ -12,7 +12,9 @@ SRCS_DIR = srcs/
 
 SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)Server.cpp \
-		$(SRCS_DIR)Client.cpp
+		$(SRCS_DIR)Client.cpp \
+		$(SRCS_DIR)CommandParser.cpp \
+		$(SRCS_DIR)PassCommand.cpp
 
 
 

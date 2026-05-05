@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:43 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/05 12:32:24 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/05 19:41:48 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,13 @@ class	Client
 		std::string	_nickname;
 		std::string	_realname;
 		std::string	_username;
+		std::string	_sendBuffer;
 		std::string	_buffer;
 		bool		auth;
 		bool		complete;
 
 	public:
-		Client(int fd){this->fd = fd;}
+		Client(int fd) : fd(fd), auth(false), complete(false) {}
 		~Client(){}
 		int					get_fd() const;
 		const std::string&	get_nick() const;
@@ -55,7 +56,11 @@ class	Client
 		void	set_complete(bool status);
 		
 		void	ClearBuff();
-		void	EarseLine(size_t pos);
+		void	EraseLine(size_t pos);
 		void	add_to_buff(const std::string& str);
+		const	std::string& get_sendBuff() const { return _sendBuffer; }
+        void	add_to_sendBuff(const std::string& str) { _sendBuffer += str; }
+        void	erase_sendBuff(size_t pos) { _sendBuffer.erase(0, pos); }
+        bool	hasDataToSend() const { return !_sendBuffer.empty(); }
 };
 
