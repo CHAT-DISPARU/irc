@@ -6,7 +6,7 @@
 /*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 17:05:27 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/04 17:11:42 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/05 12:32:58 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ int main(int ac, char **av)
 	Server  server;
 
 	server.ServerInit(atoi(av[1]));
+	server.run();
 	return (1);
 }

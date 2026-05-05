@@ -6,7 +6,56 @@
 /*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:43 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/04 15:54:44 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/05 12:32:24 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#pragma once
+#include <iostream>
+#include <vector>
+#include <sys/socket.h>
+#include <sys/types.h> 
+#include <netinet/in.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <poll.h>
+#include <csignal>
+#include <vector>
+#include <map>
+#include <cstring>
+
+class	Client
+{
+	private:
+		int			fd;
+		std::string	_nickname;
+		std::string	_realname;
+		std::string	_username;
+		std::string	_buffer;
+		bool		auth;
+		bool		complete;
+
+	public:
+		Client(int fd){this->fd = fd;}
+		~Client(){}
+		int					get_fd() const;
+		const std::string&	get_nick() const;
+		const std::string&	get_buff() const;
+		const std::string&	get_user() const;
+		const std::string&	get_real() const;
+		bool				is_auth() const;
+		bool				is_complete() const;
+		
+		void	set_nick(const std::string& str);
+		void	set_buff(const std::string& str);
+		void	set_user(const std::string& str);
+		void	set_real(const std::string& str);
+		void	set_auth(bool status);
+		void	set_complete(bool status);
+		
+		void	ClearBuff();
+		void	EarseLine(size_t pos);
+		void	add_to_buff(const std::string& str);
+};
 
