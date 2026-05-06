@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PassCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 18:37:55 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/05 18:54:50 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/06 15:00:39 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	PassCommand::exec(Server* server, Client* client, const std::vector<std::st
 {
 	if (client->is_auth())
 	{
-		server->sendReply(client->get_fd(), "462", "*", ":already registered");
+		server->sendReply(client->get_fd(), "462", client->get_nick().empty() ? "*" : client->get_nick(), ":You may not reregister");
 		return;
 	}
 	if (args.empty())

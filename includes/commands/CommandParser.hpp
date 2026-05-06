@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ICommand.hpp                                       :+:      :+:    :+:   */
+/*   CommandParser.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/05 18:33:19 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/05 19:41:43 by CHAT-DISPAR      ###   ########.fr       */
+/*   Created: 2026/05/05 17:49:12 by CHAT-DISPAR       #+#    #+#             */
+/*   Updated: 2026/05/06 14:12:42 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include "Client.hpp"
+#include "ICommand.hpp"
+class Server;
+#include <map>
 #include <string>
 #include <vector>
-class Server;
-class Client;
+#include <sstream>
 
-class ICommand
+class	CommandParser
 {
+	private:
+		std::map<std::string, ICommand*> _commands;
+
 	public:
-		virtual ~ICommand() {}
-		virtual void exec(Server* server, Client* client, const std::vector<std::string>& args) = 0;
+		CommandParser();
+		~CommandParser();
+		void	Parse(Server* server, Client* client, const std::string& message);
 };

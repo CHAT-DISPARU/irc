@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:46 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/05 19:41:39 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/06 11:59:03 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class Server
 		static void	SignalHandler(int signum);
 		Server(){fdsocket = -1;}
 		~Server();
+		void		disconect_client(int fd);
 		void		ServerInit(int port, std::string password);
 		const std::string& getPassword() const { return _password; }
 		void		SerSocket();
@@ -50,7 +51,8 @@ class Server
 		void		run();
 		void		SendData(int fd);
 		void		sendReply(int fd, const std::string& code, const std::string& target, const std::string& message);
-		Client*		getClientByNick(const std::string& nick); //a faire 
+		Client*		getClientByNick(const std::string& nick);
+		bool		checknickuse(const std::string& nick);
 };
 
 

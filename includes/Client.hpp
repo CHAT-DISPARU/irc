@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:43 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/05 19:41:48 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/06 11:50:11 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,6 @@ class	Client
         void	add_to_sendBuff(const std::string& str) { _sendBuffer += str; }
         void	erase_sendBuff(size_t pos) { _sendBuffer.erase(0, pos); }
         bool	hasDataToSend() const { return !_sendBuffer.empty(); }
+		bool	checknick(const std::string& nick) const;
 };
 

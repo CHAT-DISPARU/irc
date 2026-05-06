@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/05 19:41:30 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/06 15:22:04 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
+
+void	Server::disconect_client(int fd)
+{
+	close (fd);
+	std::cout << "the client : FD [" << fd << "] disconnected" << std::endl;
+	delete this->clients[fd];
+	clients.erase(fd);
+	
+	for (std::vector <struct pollfd>::iterator it = pollfd.begin(); it != pollfd.end(); it++)
+	{
+		if (it->fd == fd)
+		{
+			pollfd.erase(it);
+			return ;
+		}
+	}
+}
+
 
 bool	Server::signal = false;
 void	Server::SignalHandler(int signum)
@@ -69,6 +87,7 @@ void	Server::AcceptNewClient()
 
 	pollfd_server.fd = new_client_fd;
 	pollfd_server.events = POLLIN;
+	pollfd_server.revents = 0;
 	this->pollfd.push_back(pollfd_server);
 	std::cout << "New client FD : [" << new_client_fd << "]" << std::endl;
 	this->clients[new_client_fd] = new Client(new_client_fd);
@@ -89,25 +108,10 @@ void	Server::ReceiveNewData(int fd)
 			return ;
 		}
 		else
-		{
-			close (fd);
-			std::cout << "the client : FD [" << fd << "] disconnected" << std::endl;
-			delete this->clients[fd];
-			clients.erase(fd);
-			
-			for (std::vector <struct pollfd>::iterator it = pollfd.begin(); it != pollfd.end(); it++)
-			{
-				if (it->fd == fd)
-				{
-					pollfd.erase(it);
-					return ;
-				}
-			}
-		}
+			disconect_client(fd);
+		return ;
 	}
 	std::string	data(buffer);
-
-	std::cout << data;
 	this->clients[fd]->add_to_buff(data);
 
 	std::string buff = this->clients[fd]->get_buff();
@@ -129,6 +133,7 @@ void	Server::run(void)
 	
 	pollfd_server.fd = fdsocket;
 	pollfd_server.events = POLLIN;
+	pollfd_server.revents = 0;
 	this->pollfd.push_back(pollfd_server);
 	std::cout << "Waiting client ..." << std::endl;
 	while (Server::signal == false)
@@ -201,9 +206,32 @@ void	Server::SendData(int fd)
 		// buffer os plein pas grave prochain poll
 		if (errno == EAGAIN || errno == EWOULDBLOCK)
 			return; 
-		std::cerr << "Erreur d'envoi au FD [" << fd << "]" << std::endl;
-		// faut deco le client
+		std::cerr << "Erreur d'envoi au FD [" << fd << "] -> deconnexion" << std::endl;
+		disconect_client(fd);
 	} 
 	else if (bytes_sent > 0)
 		client->erase_sendBuff(bytes_sent);
+}
+
+Client*		Server::getClientByNick(const std::string& nick)
+{
+	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); it++)
+	{
+		if (it->second->get_nick() == nick)
+			return (it->second);
+	}
+	throw (std::exception());
+}
+
+bool		Server::checknickuse(const std::string& nick)
+{
+	try
+	{
+		getClientByNick(nick);
+		return (true);
+	}
+	catch (const std::exception& e)
+	{
+		return (false);
+	}
 }

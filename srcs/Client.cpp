@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 11:17:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/05 19:41:36 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/06 11:50:03 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,27 @@ void	Client::EraseLine(size_t pos)
 void	Client::add_to_buff(const std::string& str)
 {
 	this->_buffer += str;
+}
+
+bool isIrcSpecial(char c)
+{
+	return c == '[' || c == ']' || c == '\\' || c == '`' || 
+		   c == '_' || c == '^' || c == '{' || c == '|' || c == '}';
+}
+
+bool	Client::checknick(const std::string& nick) const
+{
+	if (nick.empty() || nick.length() > 9)
+		return false;
+
+	char first = nick[0];
+	if (!std::isalpha(first) && !isIrcSpecial(first))
+		return false;
+	for (size_t i = 1; i < nick.length(); ++i)
+	{
+		char c = nick[i];
+		if (!std::isalpha(c) && !std::isdigit(c) && !isIrcSpecial(c) && c != '-')
+			return false;
+	}
+	return (true);
 }

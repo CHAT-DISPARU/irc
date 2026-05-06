@@ -3,20 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParser.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 17:49:49 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/05 19:41:34 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/06 15:09:40 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CommandParser.hpp"
 #include "Server.hpp"
 #include "PassCommand.hpp"
+#include "NickCommand.hpp"
+#include "UserCommand.hpp"
 
 CommandParser::CommandParser()
 {
 	_commands["PASS"] = new PassCommand();
+	_commands["NICK"] = new NickCommand();
+	_commands["USER"] = new UserCommand();
 }
 
 CommandParser::~CommandParser()
@@ -30,11 +34,25 @@ void	CommandParser::Parse(Server* server, Client* client, const std::string& mes
 	if (message.empty())
 		return;
 
+	bool	end_param = false;
+	std::string			end_string;
 	std::istringstream			iss(message);
 	std::string					word;
 	std::vector<std::string>	args;
 	while (iss >> word)
-		args.push_back(word);
+	{
+		if (!word.empty() && word[0] == ':')
+		{
+			word.erase(0, 1);
+			end_param = true;
+		}
+		if (end_param)
+			end_string += word;
+		else
+			args.push_back(word);
+	}
+	if (end_param == true)
+		args.push_back(end_string);
 	if (args.empty())
 		return;
 	std::string cmd = args[0];
@@ -43,7 +61,7 @@ void	CommandParser::Parse(Server* server, Client* client, const std::string& mes
 		_commands[cmd]->exec(server, client, args);
 	else
 	{
-		std::cout << "Commande nconnue : " << cmd << std::endl;
-		server->sendReply(client->get_fd(), "421", "*", cmd + " :Unknown command");
+		std::cout << "Commande inconnue : " << cmd << std::endl;
+		server->sendReply(client->get_fd(), "421", client->get_nick().empty() ? "*" : client->get_nick(), cmd + " :Unknown command");
 	}
 }
