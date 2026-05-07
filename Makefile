@@ -1,6 +1,5 @@
 NAME :=  ircserv
 
-
 ESC := \033
 RESET := $(ESC)[0m
 TEXT_NEON_GREEN := $(ESC)[38;5;46m
@@ -12,7 +11,6 @@ RED=\033[0;31m
 BLUE=\033[0;34m
 PURPLE=\033[0;35m
 BUILD_DIR := build/
-
 
 SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)Server.cpp \
