@@ -15,12 +15,14 @@
 #include "PassCommand.hpp"
 #include "NickCommand.hpp"
 #include "UserCommand.hpp"
+#include "PrivmsgCommand.hpp"
 
 CommandParser::CommandParser()
 {
 	_commands["PASS"] = new PassCommand();
 	_commands["NICK"] = new NickCommand();
 	_commands["USER"] = new UserCommand();
+	_commands["PRIVMSG"] = new PrivmsgCommand();
 }
 
 CommandParser::~CommandParser()

@@ -21,7 +21,8 @@ SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)$(CMD_DIR)CommandParser.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PassCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)NickCommand.cpp \
-		$(SRCS_DIR)$(CMD_DIR)UserCommand.cpp
+		$(SRCS_DIR)$(CMD_DIR)UserCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)PrivmsgCommand.cpp
 
 
 
