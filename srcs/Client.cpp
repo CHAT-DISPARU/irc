@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 11:17:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/06 11:50:03 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/07 11:52:43 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,31 @@ void	Client::set_real(const std::string& str)
 {
 	this->_realname = str;
 }
+const std::string&	Client::get_ip() const
+{
+	return _ip;
+
+}
+void	Client::set_ip(const std::string& ip)
+{
+	_ip = ip;
+}
+
+time_t	Client::get_last_activity() const
+{
+	return _last_activity;
+}
+
+void	Client::set_ping_sent(bool status)
+{
+	this->_ping_sent = status;
+}
+
+void	Client::set_last_activity(time_t time)
+{
+	_last_activity = time;
+}
+
 void	Client::set_auth(bool status)
 {
 	this->auth = status;
@@ -79,6 +104,11 @@ void	Client::EraseLine(size_t pos)
 void	Client::add_to_buff(const std::string& str)
 {
 	this->_buffer += str;
+}
+
+std::string	Client::get_nick_or_star() const
+{
+	return _nickname.empty() ? "*" : _nickname;
 }
 
 bool isIrcSpecial(char c)

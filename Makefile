@@ -22,6 +22,9 @@ SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PassCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)NickCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)UserCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)PingCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)QuitCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)PongCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PrivmsgCommand.cpp
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/06 15:22:04 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/07 12:14:35 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	Server::disconect_client(int fd)
 {
 	close (fd);
-	std::cout << "the client : FD [" << fd << "] disconnected" << std::endl;
+	std::cout << RED << "the client : FD [" << fd << "] disconnected" << RESET << std::endl;
 	delete this->clients[fd];
 	clients.erase(fd);
 	
@@ -83,14 +83,16 @@ void	Server::AcceptNewClient()
 		std::cerr << "Error : fcntl new Client" << std::endl;
 		return ;
 	}
+	std::string client_ip = inet_ntoa(addr.sin_addr);
 	struct pollfd pollfd_server;
 
 	pollfd_server.fd = new_client_fd;
 	pollfd_server.events = POLLIN;
 	pollfd_server.revents = 0;
 	this->pollfd.push_back(pollfd_server);
-	std::cout << "New client FD : [" << new_client_fd << "]" << std::endl;
+	std::cout << GREEN << "New client FD : [" << new_client_fd << "]" << RESET << std::endl;
 	this->clients[new_client_fd] = new Client(new_client_fd);
+	this->clients[new_client_fd]->set_ip(client_ip);
 }
 
 void	Server::ReceiveNewData(int fd)
@@ -113,7 +115,8 @@ void	Server::ReceiveNewData(int fd)
 	}
 	std::string	data(buffer);
 	this->clients[fd]->add_to_buff(data);
-
+	this->clients[fd]->set_last_activity(time(NULL));
+	this->clients[fd]->set_ping_sent(false);
 	std::string buff = this->clients[fd]->get_buff();
 	size_t	pos = buff.find("\r\n");
 	while (pos != std::string::npos)
@@ -121,6 +124,8 @@ void	Server::ReceiveNewData(int fd)
 		std::string line = buff.substr(0, pos);
 		this->clients[fd]->EraseLine(pos + 2);
 		this->_parser.Parse(this, this->clients[fd], line);
+		if (this->clients.find(fd) == this->clients.end())
+			return;
 		buff = this->clients[fd]->get_buff();
 		pos = buff.find("\r\n");
 	}
@@ -138,6 +143,39 @@ void	Server::run(void)
 	std::cout << "Waiting client ..." << std::endl;
 	while (Server::signal == false)
 	{
+		time_t	current_time = time(NULL);
+		std::vector<int> fds_to_check; 
+		for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
+			fds_to_check.push_back(it->first);
+		for (size_t i = 0; i < fds_to_check.size(); ++i)
+		{
+			int fd = fds_to_check[i];
+			if (clients.find(fd) == clients.end())
+				continue;
+			Client* client = clients[fd];
+			if (client->is_complete())
+			{
+				if (current_time - client->get_last_activity() > 150)
+				{
+					std::cout << "Ping timeout for " << client->get_nick() << std::endl;
+					disconect_client(fd);
+				}
+				if (current_time - client->get_last_activity() > 120)
+				{
+					std::string ping_msg = "PING :gajanvie.rolavale.irc\r\n";
+					client->add_to_sendBuff(ping_msg);
+					client->set_ping_sent(true);
+				}
+			}
+			else 
+			{
+				if (current_time - client->get_last_activity() > 60) 
+				{
+					std::cout << "Client FD [" << fd << "] disconnected (Took too long to register)" << std::endl;
+					disconect_client(fd);
+				}
+			}
+		}
 		for (size_t i = 0; i < pollfd.size(); i++)
 		{
 			if (pollfd[i].fd != fdsocket)
@@ -234,4 +272,76 @@ bool		Server::checknickuse(const std::string& nick)
 	{
 		return (false);
 	}
+}
+
+bool	Server::checkRegistration(Client* client)
+{
+	if (!client->is_complete())
+	{
+		sendReply(client->get_fd(), "451", client->get_nick_or_star(), ":You have not registered");
+		return false;
+	}
+	return true;
+}
+
+bool	Server::alreadyRegistered(Client* client)
+{
+	if (client->is_complete())
+	{
+		sendReply(client->get_fd(), "462", client->get_nick_or_star(), ":You may not reregister");
+		return true;
+	}
+	return false;
+}
+
+bool	Server::isAuthenticated(Client* client)
+{
+	if (client->is_auth()) 
+		return true;
+	return false;
+}
+
+bool	Server::hasEnoughParams(Client* client, const std::string& commandName, const std::vector<std::string>& args, size_t requiredSize)
+{
+	if (args.size() < requiredSize)
+	{
+		sendReply(client->get_fd(), "461", client->get_nick_or_star(), commandName + " :Not enough parameters");
+		return false;
+	}
+	return true;
+}
+
+void	Server::sendWelcome(Client* client)
+{
+	std::string nick = client->get_nick();
+	std::string user = client->get_user();
+	std::string host = client->get_ip();;
+	std::string network = nick + "!" + user + "@" + host;
+	sendReply(client->get_fd(), "001", nick, ":Welcome to the Internet Relay Network " + network);
+	sendReply(client->get_fd(), "375", nick, ":- gajanvie.rolavale.irc Message of the day -");
+
+	sendReply(client->get_fd(), "372", nick, ":-  _          _ _         ");
+	sendReply(client->get_fd(), "372", nick, "               ,,ggddY\"\"\"Ybbgg,,");
+	sendReply(client->get_fd(), "372", nick, "          ,agd888b,_ \"Y8, ___`\"\"Ybga,");
+	sendReply(client->get_fd(), "372", nick, "       ,gdP\"\"88888888baa,.\"\"8b    \"888g,");
+	sendReply(client->get_fd(), "372", nick, "     ,dP\"     ]888888888P'  \"Y     `888Yb,");
+	sendReply(client->get_fd(), "372", nick, "   ,dP\"      ,88888888P\"  db,       \"8P\"\"Yb,");
+	sendReply(client->get_fd(), "372", nick, "  ,8\"       ,888888888b, d8888a           \"8,");
+	sendReply(client->get_fd(), "372", nick, " ,8'        d88888888888,88P\"' a,          `8,");
+	sendReply(client->get_fd(), "372", nick, ",8'         88888888888888PP\"  \"\"           `8,");
+	sendReply(client->get_fd(), "372", nick, "d'          I88888888888P\"                   `b");
+	sendReply(client->get_fd(), "372", nick, "8           `8\"88P\"\"Y8P'                      8");
+	sendReply(client->get_fd(), "372", nick, "8            Y 8[  _ \"                        8");
+	sendReply(client->get_fd(), "372", nick, "8              \"Y8d8b  \"Y a                   8");
+	sendReply(client->get_fd(), "372", nick, "8                 `\"\"8d,   __                 8");
+	sendReply(client->get_fd(), "372", nick, "Y,                    `\"8bd888b,             ,P");
+	sendReply(client->get_fd(), "372", nick, "`8,                     ,d8888888baaa       ,8'");
+	sendReply(client->get_fd(), "372", nick, " `8,                    888888888888'      ,8'");
+	sendReply(client->get_fd(), "372", nick, "  `8a                   \"8888888888I      a8'");
+	sendReply(client->get_fd(), "372", nick, "   `Yba                  `Y8888888P'    adP'");
+	sendReply(client->get_fd(), "372", nick, "     \"Yba                 `888888P'   adY\"");
+	sendReply(client->get_fd(), "372", nick, "       `\"Yba,             d8888P\" ,adP\"'  Welcome");
+	sendReply(client->get_fd(), "372", nick, "          `\"Y8baa,      ,d888P,ad8P\"'           to");
+	sendReply(client->get_fd(), "372", nick, "               ``\"\"YYba8888P\"\"''          Our IRC");
+	sendReply(client->get_fd(), "376", nick, ":End of /MOTD command.");
 }

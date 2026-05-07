@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParser.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 17:49:49 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/06 15:09:40 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/07 11:40:01 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 #include "NickCommand.hpp"
 #include "UserCommand.hpp"
 #include "PrivmsgCommand.hpp"
+#include "PongCommand.hpp"
+#include "PingCommand.hpp"
+#include "QuitCommand.hpp"
 
 CommandParser::CommandParser()
 {
@@ -23,6 +26,9 @@ CommandParser::CommandParser()
 	_commands["NICK"] = new NickCommand();
 	_commands["USER"] = new UserCommand();
 	_commands["PRIVMSG"] = new PrivmsgCommand();
+	_commands["PONG"] = new PongCommand();
+	_commands["PING"] = new PingCommand();
+	_commands["QUIT"] = new QuitCommand();
 }
 
 CommandParser::~CommandParser()

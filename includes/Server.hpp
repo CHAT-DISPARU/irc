@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:46 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/06 11:59:03 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/07 11:53:29 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,12 @@
 #include <Client.hpp>
 #include <CommandParser.hpp>
 #include <cerrno>
+
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define CYAN "\033[36m"
+#define RESET "\033[0m"
 
 class Server
 {
@@ -53,6 +59,11 @@ class Server
 		void		sendReply(int fd, const std::string& code, const std::string& target, const std::string& message);
 		Client*		getClientByNick(const std::string& nick);
 		bool		checknickuse(const std::string& nick);
+		bool		checkRegistration(Client* client);
+		bool		alreadyRegistered(Client* client);
+		bool		isAuthenticated(Client* client);
+		bool		hasEnoughParams(Client* client, const std::string& commandName, const std::vector<std::string>& args, size_t requiredSize);
+		void		sendWelcome(Client* client);
 };
 
 

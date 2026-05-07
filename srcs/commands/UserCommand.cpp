@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 12:33:39 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/06 15:37:59 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/07 12:15:39 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,33 @@
 
 void	UserCommand::exec(Server* server, Client* client, const std::vector<std::string>& args)
 {
-	if (!client->is_auth())
-	{
-		server->sendReply(client->get_fd(), "464", !client->get_nick().empty() ? client->get_nick() : "*", ":Password incorrect");
+	if (!server->isAuthenticated(client))
 		return;
-	}
-	if (!client->get_user().empty())
-	{
-		server->sendReply(client->get_fd(), "462", !client->get_nick().empty() ? client->get_nick() : "*", ":You may not reregister");
+	if (server->alreadyRegistered(client))
 		return;
-	}
-	if (args.empty() || args.size() < 4)
-	{
-		server->sendReply(client->get_fd(), "461", !client->get_nick().empty() ? client->get_nick() : "*", ":Not enough parameters");
+	if (!server->hasEnoughParams(client, "USER", args, 4))
 		return;
-	}
+
 	if (args[1] != "0")
 	{
-		server->sendReply(client->get_fd(), "400", !client->get_nick().empty() ? client->get_nick() : "*", ":Please enter 0 for the second param of USER");
+		server->sendReply(client->get_fd(), "400", client->get_nick_or_star(), ":Please enter 0 for the second param of USER");
 		return;
 	}
 	if (args[2] != "*")
 	{
-		server->sendReply(client->get_fd(), "400", !client->get_nick().empty() ? client->get_nick() : "*", ":Please enter * for the third param of USER");
+		server->sendReply(client->get_fd(), "400", client->get_nick_or_star(), ":Please enter * for the third param of USER");
 		return;
 	}
 	if (args.size() >= 5)
 	{
-		server->sendReply(client->get_fd(), "400", !client->get_nick().empty() ? client->get_nick() : "*", ":Please enter : at the beginning of the fourth param");
+		server->sendReply(client->get_fd(), "400", client->get_nick_or_star(), ":Please enter : at the beginning of the fourth param");
 		return;
 	}
-	client->set_real(args[3]);
 	client->set_user(args[0]);
+	client->set_real(args[3]);
 	if (!client->get_nick().empty())
+	{
 		client->set_complete(true);
+		server->sendWelcome(client);
+	}
 }
