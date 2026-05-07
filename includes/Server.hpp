@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:46 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 11:53:29 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/07 14:18:05 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #include <Client.hpp>
 #include <CommandParser.hpp>
 #include <cerrno>
-
+#include <Channel.hpp>
 #define RED "\033[31m"
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"
@@ -37,13 +37,14 @@
 class Server
 {
 	private:
-		std::string					_password;
-		std::map<int, Client *>		clients;
-		std::vector<struct pollfd>	pollfd;
-		int							fdsocket;
-		int							port;
-		static bool					signal;
-		CommandParser				_parser;
+		std::string							_password;
+		std::map<int, Client *>				clients;
+		std::map<std::string, Channel *>	channels;
+		std::vector<struct pollfd>			pollfd;
+		int									fdsocket;
+		int									port;
+		static bool							signal;
+		CommandParser						_parser;
 	public:
 		static void	SignalHandler(int signum);
 		Server(){fdsocket = -1;}

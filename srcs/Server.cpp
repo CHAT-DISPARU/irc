@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 12:14:35 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/07 14:14:23 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,39 +143,6 @@ void	Server::run(void)
 	std::cout << "Waiting client ..." << std::endl;
 	while (Server::signal == false)
 	{
-		time_t	current_time = time(NULL);
-		std::vector<int> fds_to_check; 
-		for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
-			fds_to_check.push_back(it->first);
-		for (size_t i = 0; i < fds_to_check.size(); ++i)
-		{
-			int fd = fds_to_check[i];
-			if (clients.find(fd) == clients.end())
-				continue;
-			Client* client = clients[fd];
-			if (client->is_complete())
-			{
-				if (current_time - client->get_last_activity() > 150)
-				{
-					std::cout << "Ping timeout for " << client->get_nick() << std::endl;
-					disconect_client(fd);
-				}
-				if (current_time - client->get_last_activity() > 120)
-				{
-					std::string ping_msg = "PING :gajanvie.rolavale.irc\r\n";
-					client->add_to_sendBuff(ping_msg);
-					client->set_ping_sent(true);
-				}
-			}
-			else 
-			{
-				if (current_time - client->get_last_activity() > 60) 
-				{
-					std::cout << "Client FD [" << fd << "] disconnected (Took too long to register)" << std::endl;
-					disconect_client(fd);
-				}
-			}
-		}
 		for (size_t i = 0; i < pollfd.size(); i++)
 		{
 			if (pollfd[i].fd != fdsocket)
@@ -319,7 +286,6 @@ void	Server::sendWelcome(Client* client)
 	std::string network = nick + "!" + user + "@" + host;
 	sendReply(client->get_fd(), "001", nick, ":Welcome to the Internet Relay Network " + network);
 	sendReply(client->get_fd(), "375", nick, ":- gajanvie.rolavale.irc Message of the day -");
-
 	sendReply(client->get_fd(), "372", nick, ":-  _          _ _         ");
 	sendReply(client->get_fd(), "372", nick, "               ,,ggddY\"\"\"Ybbgg,,");
 	sendReply(client->get_fd(), "372", nick, "          ,agd888b,_ \"Y8, ___`\"\"Ybga,");

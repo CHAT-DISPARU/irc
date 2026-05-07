@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 11:17:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 11:52:43 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/07 13:57:03 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,11 @@ void	Client::set_ping_sent(bool status)
 void	Client::set_last_activity(time_t time)
 {
 	_last_activity = time;
+}
+
+bool		Client::get_ping_sent() const
+{
+	return (this->_ping_sent);
 }
 
 void	Client::set_auth(bool status)

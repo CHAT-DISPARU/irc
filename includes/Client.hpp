@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:43 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 11:52:10 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/07 13:57:09 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,6 @@ class	Client
 		time_t		get_last_activity() const;
 		void		set_last_activity(time_t time);
 		void		set_ping_sent(bool status);
+		bool		get_ping_sent() const;
 };
 
