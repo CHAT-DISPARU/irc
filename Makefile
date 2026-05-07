@@ -1,7 +1,6 @@
 NAME :=  ircserv
 
 
-
 ESC := \033
 RESET := $(ESC)[0m
 TEXT_NEON_GREEN := $(ESC)[38;5;46m
