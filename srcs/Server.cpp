@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rolavale <rolavale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 14:14:23 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/07 16:49:58 by rolavale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	Server::AcceptNewClient()
 	pollfd_server.events = POLLIN;
 	pollfd_server.revents = 0;
 	this->pollfd.push_back(pollfd_server);
-	std::cout << GREEN << "New client FD : [" << new_client_fd << "]" << RESET << std::endl;
+	std::cout << GREEN << "New Client FD : [" << new_client_fd << "]" << RESET << std::endl;
 	this->clients[new_client_fd] = new Client(new_client_fd);
 	this->clients[new_client_fd]->set_ip(client_ip);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rolavale <rolavale@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 11:17:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 13:57:03 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/07 16:40:50 by rolavale         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	Client::set_real(const std::string& str)
 const std::string&	Client::get_ip() const
 {
 	return _ip;
-
 }
 void	Client::set_ip(const std::string& ip)
 {
