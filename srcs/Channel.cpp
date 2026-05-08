@@ -1,63 +1,163 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/08 12:03:05 by CHAT-DISPAR       #+#    #+#             */
+/*   Updated: 2026/05/08 12:39:43 by CHAT-DISPAR      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "NickCommand.hpp"
 #include "Server.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
 
-bool	Channel::get_mode(char c)
+Channel::Channel(std::string name) : _name(name), _user_limit(0)
+{
+	for (int i = 0; i < 5; i++)
+		_modes[i] = false;
+}
+
+Channel::~Channel() {}
+
+const std::string&	Channel::getName() const
+{
+	return _name;
+}
+
+const std::string&	Channel::getTopic() const
+{
+	return _topic;
+}
+
+bool	Channel::hasMode(char c) const
 {
 	if (c == 'i')
-		return mode[0];
+		return _modes[0];
 	if (c == 't')
-		return mode[1];
+		return _modes[1];
 	if (c == 'k')
-		return mode[2];
+		return _modes[2];
 	if (c == 'o')
-		return mode[3];
+		return _modes[3];
 	if (c == 'l')
-		return mode[4];
+		return _modes[4];
 	return false;
 }
 
-void	Channel::set_mode(char c, bool status)
+bool	Channel::isFull() const
+{
+	if (_modes[4] && _user_limit > 0)
+		return _members.size() >= _user_limit;
+	return false;
+}
+
+bool	Channel::isInvited(int fd) const
+{
+	for (size_t i = 0; i < _invited_fds.size(); i++)
+	{
+		if (_invited_fds[i] == fd)
+			return true;
+	}
+	return false;
+}
+
+bool	Channel::checkKey(const std::string& key) const
+{
+	if (!_modes[2])
+		return true;
+	return (_pass == key);
+}
+
+void	Channel::setMode(char c, bool status)
 {
 	if (c == 'i')
-		mode[0] == status;
+		_modes[0] = status;
 	if (c == 't')
-		mode[1] == status;
+		_modes[1] = status;
 	if (c == 'k')
-		mode[2] == status;
+		_modes[2] = status;
 	if (c == 'o')
-		mode[3] == status;
+		_modes[3] = status;
 	if (c == 'l')
-		mode[4] == status;
+		_modes[4] = status;
+}
+
+void	Channel::setTopic(const std::string& topic)
+{
+	_topic = topic;
+}
+
+void	Channel::setKey(const std::string& key)
+{
+	_pass = key;
+}
+
+void	Channel::setLimit(size_t limit)
+{
+	_user_limit = limit;
 }
 
 void	Channel::addMember(Client *client)
 {
-	this->members[client->get_fd()] = new Client(client->get_fd());
+	if (client)
+		_members[client->get_fd()] = client;
 }
 
 void	Channel::addOperator(Client *client)
 {
-	this->operators[client->get_fd()] = new Client(client->get_fd());
+	if (client)
+		_operators[client->get_fd()] = client;
 }
 
-void	Channel::delMember(Client *client)
+void	Channel::removeMember(int fd)
 {
-	delete members[client->get_fd()];
+	_members.erase(fd);
+	_operators.erase(fd);
+	for (std::vector<int>::iterator it = _invited_fds.begin(); it != _invited_fds.end(); ++it)
+	{
+		if (*it == fd)
+		{
+			_invited_fds.erase(it);
+			break;
+		}
+	}
 }
 
-void	Channel::delOperator(Client *client)
+void	Channel::removeOperator(int fd)
 {
-	delete operators[client->get_fd()];
+	_operators.erase(fd);
 }
 
-void	Channel::set_topic(const std::string& str)
+void	Channel::addInvite(int fd)
 {
-	_topic = str;
+	if (!isInvited(fd))
+		_invited_fds.push_back(fd);
 }
 
-const std::string&	Channel::get_topic()
+void	Channel::broadcast(const std::string& message, int excludeFd)
 {
-	return _topic;
+	std::map<int, Client *>::iterator it;
+	for (it = _members.begin(); it != _members.end(); ++it)
+	{
+		if (it->first != excludeFd)
+			it->second->add_to_sendBuff(message);
+	}
+}
+
+std::string	Channel::getClientList()
+{
+	std::string							list = "";
+	std::map<int, Client *>::iterator	it;
+
+	for (it = _members.begin(); it != _members.end(); ++it)
+	{
+		if (_operators.find(it->first) != _operators.end())
+			list += "@";
+		list += it->second->get_nick() + " ";
+	}
+	return (list);
 }

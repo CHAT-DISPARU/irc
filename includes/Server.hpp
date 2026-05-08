@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:46 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 14:18:05 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/08 12:20:44 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ class Server
 		bool		isAuthenticated(Client* client);
 		bool		hasEnoughParams(Client* client, const std::string& commandName, const std::vector<std::string>& args, size_t requiredSize);
 		void		sendWelcome(Client* client);
+		Channel*	getChannel(const std::string& name);
+		void		addChannel(Channel* channel);
 };
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rolavale <rolavale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 16:49:58 by rolavale         ###   ########.fr       */
+/*   Updated: 2026/05/08 12:21:09 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,6 +285,7 @@ void	Server::sendWelcome(Client* client)
 	std::string host = client->get_ip();;
 	std::string network = nick + "!" + user + "@" + host;
 	sendReply(client->get_fd(), "001", nick, ":Welcome to the Internet Relay Network " + network);
+	sendReply(client->get_fd(), "005", nick, "USERLEN=12 :are supported by this server");
 	sendReply(client->get_fd(), "375", nick, ":- gajanvie.rolavale.irc Message of the day -");
 	sendReply(client->get_fd(), "372", nick, ":-  _          _ _         ");
 	sendReply(client->get_fd(), "372", nick, "               ,,ggddY\"\"\"Ybbgg,,");
@@ -310,4 +311,17 @@ void	Server::sendWelcome(Client* client)
 	sendReply(client->get_fd(), "372", nick, "          `\"Y8baa,      ,d888P,ad8P\"'           to");
 	sendReply(client->get_fd(), "372", nick, "               ``\"\"YYba8888P\"\"''          Our IRC");
 	sendReply(client->get_fd(), "376", nick, ":End of /MOTD command.");
+}
+
+Channel*	Server::getChannel(const std::string& name)
+{
+	if (channels.find(name) != channels.end())
+		return channels[name];
+	return NULL;
+}
+
+void	Server::addChannel(Channel* channel)
+{
+	if (channel)
+		channels[channel->getName()] = channel;
 }

@@ -3,34 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rolavale <rolavale@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 14:15:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 16:46:44 by rolavale         ###   ########.fr       */
+/*   Updated: 2026/05/08 12:37:42 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #pragma once
 #include <Server.hpp>
 
-class	Channel
+class Channel
 {
 	private:
-		std::map<int, Client *>		members;
-		std::map<int, Client *>		operators;
-		bool						mode[5];
+		std::string					_name;
 		std::string					_topic;
 		std::string					_pass;
-		size_t						user_limit;
-		std::vector<int>			_invited_fd;
+		size_t						_user_limit;
+		bool						_modes[5];
+		std::map<int, Client *>		_members;
+		std::map<int, Client *>		_operators;
+		std::vector<int>			_invited_fds;
+
 	public:
-		bool				get_mode(char c);
-		void				set_mode(char c, bool status);
+		Channel(std::string name);
+		~Channel();
+
+		std::string			getClientList();
+		const std::string&	getName() const;
+		const std::string&	getTopic() const;
+		bool				hasMode(char c) const;
+		bool				isFull() const;
+		bool				isInvited(int fd) const;
+		bool				checkKey(const std::string& key) const;
+
 		void				addMember(Client *client);
+		void				removeMember(int fd);
 		void				addOperator(Client *client);
-		void				delMember(Client *client);
-		void				delOperator(Client *client);
-		void				set_topic(const std::string& str);
-		const std::string&	get_topic();
+		void				removeOperator(int fd);
+		void				addInvite(int fd);
+		void				broadcast(const std::string& message, int excludeFd = -1);
+
+		void				setTopic(const std::string& topic);
+		void				setMode(char c, bool status);
+		void				setKey(const std::string& key);
+		void				setLimit(size_t limit);
 };

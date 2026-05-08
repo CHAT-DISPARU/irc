@@ -6,7 +6,7 @@
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 17:49:49 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/07 11:40:01 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/08 12:34:10 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "PongCommand.hpp"
 #include "PingCommand.hpp"
 #include "QuitCommand.hpp"
+#include "JoinCommand.hpp"
 
 CommandParser::CommandParser()
 {
@@ -29,6 +30,7 @@ CommandParser::CommandParser()
 	_commands["PONG"] = new PongCommand();
 	_commands["PING"] = new PingCommand();
 	_commands["QUIT"] = new QuitCommand();
+	_commands["JOIN"] = new JoinCommand();
 }
 
 CommandParser::~CommandParser()
@@ -55,7 +57,11 @@ void	CommandParser::Parse(Server* server, Client* client, const std::string& mes
 			end_param = true;
 		}
 		if (end_param)
+		{
+			if (!end_string.empty())
+				end_string += " ";
 			end_string += word;
+		}
 		else
 			args.push_back(word);
 	}

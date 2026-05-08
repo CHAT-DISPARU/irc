@@ -15,6 +15,7 @@ BUILD_DIR := build/
 SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)Server.cpp \
 		$(SRCS_DIR)Client.cpp \
+		$(SRCS_DIR)Channel.cpp \
 		$(SRCS_DIR)$(CMD_DIR)CommandParser.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PassCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)NickCommand.cpp \
@@ -22,7 +23,8 @@ SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PingCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)QuitCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PongCommand.cpp \
-		$(SRCS_DIR)$(CMD_DIR)PrivmsgCommand.cpp
+		$(SRCS_DIR)$(CMD_DIR)PrivmsgCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)JoinCommand.cpp
 
 
 

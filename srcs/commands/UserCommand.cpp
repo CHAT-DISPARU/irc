@@ -6,7 +6,7 @@
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 12:33:39 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/07 12:15:39 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/08 12:34:18 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ void	UserCommand::exec(Server* server, Client* client, const std::vector<std::st
 	if (!server->hasEnoughParams(client, "USER", args, 4))
 		return;
 
+	std::string	username = args[0];
+	if (username.length() > USERLEN)
+		username = username.substr(0, USERLEN);
 	if (args[1] != "0")
 	{
 		server->sendReply(client->get_fd(), "400", client->get_nick_or_star(), ":Please enter 0 for the second param of USER");
@@ -33,12 +36,7 @@ void	UserCommand::exec(Server* server, Client* client, const std::vector<std::st
 		server->sendReply(client->get_fd(), "400", client->get_nick_or_star(), ":Please enter * for the third param of USER");
 		return;
 	}
-	if (args.size() >= 5)
-	{
-		server->sendReply(client->get_fd(), "400", client->get_nick_or_star(), ":Please enter : at the beginning of the fourth param");
-		return;
-	}
-	client->set_user(args[0]);
+	client->set_user(username);
 	client->set_real(args[3]);
 	if (!client->get_nick().empty())
 	{
