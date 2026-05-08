@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:46 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/08 12:20:44 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/08 13:56:06 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #pragma once
 #include <iostream>
