@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/08 12:21:09 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/08 15:34:31 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,7 +287,6 @@ void	Server::sendWelcome(Client* client)
 	sendReply(client->get_fd(), "001", nick, ":Welcome to the Internet Relay Network " + network);
 	sendReply(client->get_fd(), "005", nick, "USERLEN=12 :are supported by this server");
 	sendReply(client->get_fd(), "375", nick, ":- gajanvie.rolavale.irc Message of the day -");
-	sendReply(client->get_fd(), "372", nick, ":-  _          _ _         ");
 	sendReply(client->get_fd(), "372", nick, "               ,,ggddY\"\"\"Ybbgg,,");
 	sendReply(client->get_fd(), "372", nick, "          ,agd888b,_ \"Y8, ___`\"\"Ybga,");
 	sendReply(client->get_fd(), "372", nick, "       ,gdP\"\"88888888baa,.\"\"8b    \"888g,");

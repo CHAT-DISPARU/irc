@@ -6,7 +6,7 @@
 /*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 12:03:05 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/08 15:01:46 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/08 15:21:15 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,4 +160,23 @@ std::string	Channel::getClientList()
 		list += it->second->get_nick() + " ";
 	}
 	return (list);
+}
+
+bool	Channel::is_inChannel(Client *client)
+{
+	std::map<int, Client *>::iterator	it;
+	
+	for (it = _members.begin(); it != _members.end(); ++it)
+	{
+		if (it->second == client)
+			return (true);
+	}
+	return (false);
+}
+
+bool	Channel::isOperator(Client *client)
+{
+	if (_operators.find(client->get_fd()) != _operators.end())
+		return (true);
+	return (false);
 }

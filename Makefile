@@ -24,6 +24,7 @@ SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)$(CMD_DIR)QuitCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PongCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PrivmsgCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)PartCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)JoinCommand.cpp
 
 

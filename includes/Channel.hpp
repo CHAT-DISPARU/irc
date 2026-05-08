@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 14:15:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/08 12:37:42 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/08 15:21:13 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ class Channel
 		void				addOperator(Client *client);
 		void				removeOperator(int fd);
 		void				addInvite(int fd);
+		bool				is_inChannel(Client *client);
+		bool				isOperator(Client *client);
+		
 		void				broadcast(const std::string& message, int excludeFd = -1);
 
 		void				setTopic(const std::string& topic);

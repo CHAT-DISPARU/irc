@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParser.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 17:49:49 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/08 12:34:10 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/08 15:36:22 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "PingCommand.hpp"
 #include "QuitCommand.hpp"
 #include "JoinCommand.hpp"
+#include "PartCommand.hpp"
 
 CommandParser::CommandParser()
 {
@@ -31,6 +32,7 @@ CommandParser::CommandParser()
 	_commands["PING"] = new PingCommand();
 	_commands["QUIT"] = new QuitCommand();
 	_commands["JOIN"] = new JoinCommand();
+	_commands["PART"] = new PartCommand();
 }
 
 CommandParser::~CommandParser()
