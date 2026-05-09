@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 14:15:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/08 15:21:13 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/08 18:39:14 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,18 @@ class Channel
 		Channel(std::string name);
 		~Channel();
 
-		std::string			getClientList();
-		const std::string&	getName() const;
-		const std::string&	getTopic() const;
+		std::string				getClientList();
+		const std::string&		getName() const;
+		const std::string&		getTopic() const;
+		std::map<int, Client*>	getMembers() const;
+
 		bool				hasMode(char c) const;
 		bool				isFull() const;
 		bool				isInvited(int fd) const;
 		bool				checkKey(const std::string& key) const;
+		bool				isEmpty() const;
 
+		void				removeInvite(int fd);
 		void				addMember(Client *client);
 		void				removeMember(int fd);
 		void				addOperator(Client *client);

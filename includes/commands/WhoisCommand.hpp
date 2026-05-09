@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   JoinCommand.hpp                                    :+:      :+:    :+:   */
+/*   WhoisCommand.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/08 12:21:40 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/09 12:14:42 by CHAT-DISPAR      ###   ########.fr       */
+/*   Created: 2026/05/08 19:00:37 by CHAT-DISPAR       #+#    #+#             */
+/*   Updated: 2026/05/08 19:13:47 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "ICommand.hpp"
 
-class	JoinCommand : public ICommand
+class	WhoisCommand : public ICommand
 {
 	public:
-		JoinCommand() {}
-		~JoinCommand() {}
+		WhoisCommand() {}
+		~WhoisCommand() {}
 		void	exec(Server* server, Client* client, const std::vector<std::string>& args);
 };

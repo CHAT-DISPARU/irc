@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/08 15:34:31 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/09 12:16:05 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,12 +178,16 @@ void	Server::run(void)
 
 Server::~Server()
 {
-	for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); it++)
+	for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); it++)
 	{
 		close(it->first);
 		delete it->second;
 	}
 	clients.clear();
+	for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); it++)
+		delete it->second;
+	channels.clear();
+
 	pollfd.clear();
 	if (fdsocket != -1)
 	{
@@ -225,20 +229,15 @@ Client*		Server::getClientByNick(const std::string& nick)
 		if (it->second->get_nick() == nick)
 			return (it->second);
 	}
-	throw (std::exception());
+	return (NULL);
 }
 
 bool		Server::checknickuse(const std::string& nick)
 {
-	try
-	{
-		getClientByNick(nick);
+	Client	*tmp = getClientByNick(nick);
+	if (tmp)
 		return (true);
-	}
-	catch (const std::exception& e)
-	{
-		return (false);
-	}
+	return (false);
 }
 
 bool	Server::checkRegistration(Client* client)
@@ -285,7 +284,7 @@ void	Server::sendWelcome(Client* client)
 	std::string host = client->get_ip();;
 	std::string network = nick + "!" + user + "@" + host;
 	sendReply(client->get_fd(), "001", nick, ":Welcome to the Internet Relay Network " + network);
-	sendReply(client->get_fd(), "005", nick, "USERLEN=12 :are supported by this server");
+	sendReply(client->get_fd(), "005", nick, "CHANTYPES=#& USERLEN=12 :are supported by this server");
 	sendReply(client->get_fd(), "375", nick, ":- gajanvie.rolavale.irc Message of the day -");
 	sendReply(client->get_fd(), "372", nick, "               ,,ggddY\"\"\"Ybbgg,,");
 	sendReply(client->get_fd(), "372", nick, "          ,agd888b,_ \"Y8, ___`\"\"Ybga,");
@@ -323,4 +322,30 @@ void	Server::addChannel(Channel* channel)
 {
 	if (channel)
 		channels[channel->getName()] = channel;
+}
+
+std::vector<Channel*>	Server::getClientChannels(Client* client)
+{
+	std::vector<Channel*>	result;
+	for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); it++)
+	{
+		if (it->second->is_inChannel(client))
+			result.push_back(it->second);
+	}
+	return result;
+}
+
+void	Server::removeChannel(const std::string& name)
+{
+	std::map<std::string, Channel*>::iterator	it = channels.find(name);
+	if (it != channels.end())
+	{
+		delete it->second;
+		channels.erase(it);
+	}
+}
+
+std::map<int, Client *>	Server::getClients() const
+{
+	return (clients);
 }

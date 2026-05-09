@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   PrivmsgCommand.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:11:50 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/07 14:50:41 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/08 19:11:04 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PrivmsgCommand.hpp"
 #include "Server.hpp"
 #include "Client.hpp"
+#include "Channel.hpp"
 
 void	PrivmsgCommand::exec(Server* server, Client* client, const std::vector<std::string>& args)
 {
@@ -29,17 +30,28 @@ void	PrivmsgCommand::exec(Server* server, Client* client, const std::vector<std:
 		return ;
 	}
 
-	std::string target  = args[0];
-	std::string message = args[1];
-	Client* dest = NULL;
-	try
+	std::string	target = args[0];
+	std::string	message = args[1];
+	std::string	sender_prefix = ":" + client->get_nick() + "!" + client->get_user() + "@" + client->get_ip();
+
+	if (target[0] == '#' || target[0] == '&')
 	{
-		dest = server->getClientByNick(target);
+		Channel*	channel = server->getChannel(target);
+		if (!channel)
+		{
+			server->sendReply(client->get_fd(), "401", client->get_nick(), target + " :No such nick/channel");
+			return ;
+		}
+		channel->broadcast(sender_prefix + " PRIVMSG " + target + " :" + message + "\r\n", client->get_fd());
 	}
-	catch (const std::exception&)
+	else
 	{
-		server->sendReply(client->get_fd(), "401", client->get_nick(), target + " :No such nick");
-		return ;
+		Client*	dest = server->getClientByNick(target);
+		if (!dest)
+		{
+			server->sendReply(client->get_fd(), "401", client->get_nick(), target + " :No such nick/channel");
+			return ;
+		}
+		dest->add_to_sendBuff(sender_prefix + " PRIVMSG " + target + " :" + message + "\r\n");
 	}
-	dest->add_to_sendBuff(":" + client->get_nick() + "!" + client->get_user() + "@" + client->get_ip() + " PRIVMSG " + target + " :" + message + "\r\n");
 }

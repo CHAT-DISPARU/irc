@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 12:03:05 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/08 15:21:15 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/08 19:13:31 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,4 +179,26 @@ bool	Channel::isOperator(Client *client)
 	if (_operators.find(client->get_fd()) != _operators.end())
 		return (true);
 	return (false);
+}
+
+void	Channel::removeInvite(int fd)
+{
+	for (std::vector<int>::iterator it = _invited_fds.begin(); it != _invited_fds.end(); ++it)
+	{
+		if (*it == fd)
+		{
+			_invited_fds.erase(it);
+			return;
+		}
+	}
+}
+
+bool	Channel::isEmpty() const
+{
+	return (_members.empty());
+}
+
+std::map<int, Client*>	Channel::getMembers() const
+{
+	return _members;
 }

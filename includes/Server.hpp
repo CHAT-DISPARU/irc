@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:46 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/08 13:56:06 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/08 19:07:35 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,27 @@ class Server
 		static void	SignalHandler(int signum);
 		Server(){fdsocket = -1;}
 		~Server();
-		void		disconect_client(int fd);
-		void		ServerInit(int port, std::string password);
-		const std::string& getPassword() const { return _password; }
-		void		SerSocket();
-		void		AcceptNewClient();
-		void		ReceiveNewData(int fd);
-		void		run();
-		void		SendData(int fd);
-		void		sendReply(int fd, const std::string& code, const std::string& target, const std::string& message);
-		Client*		getClientByNick(const std::string& nick);
-		bool		checknickuse(const std::string& nick);
-		bool		checkRegistration(Client* client);
-		bool		alreadyRegistered(Client* client);
-		bool		isAuthenticated(Client* client);
-		bool		hasEnoughParams(Client* client, const std::string& commandName, const std::vector<std::string>& args, size_t requiredSize);
-		void		sendWelcome(Client* client);
-		Channel*	getChannel(const std::string& name);
-		void		addChannel(Channel* channel);
+		void					disconect_client(int fd);
+		void					ServerInit(int port, std::string password);
+		const std::string&		getPassword() const { return _password; }
+		void					SerSocket();
+		void					AcceptNewClient();
+		void					ReceiveNewData(int fd);
+		void					run();
+		std::map<int, Client *>	getClients() const;
+		void					SendData(int fd);
+		void					sendReply(int fd, const std::string& code, const std::string& target, const std::string& message);
+		Client*					getClientByNick(const std::string& nick);
+		bool					checknickuse(const std::string& nick);
+		bool					checkRegistration(Client* client);
+		bool					alreadyRegistered(Client* client);
+		bool					isAuthenticated(Client* client);
+		bool					hasEnoughParams(Client* client, const std::string& commandName, const std::vector<std::string>& args, size_t requiredSize);
+		void					sendWelcome(Client* client);
+		Channel*				getChannel(const std::string& name);
+		void					addChannel(Channel* channel);
+		std::vector<Channel*>	getClientChannels(Client* client);
+		void					removeChannel(const std::string& name);
 };
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParser.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 17:49:49 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/08 15:36:22 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/08 19:12:12 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 #include "QuitCommand.hpp"
 #include "JoinCommand.hpp"
 #include "PartCommand.hpp"
+#include "WhoCommand.hpp"
+#include "WhoisCommand.hpp"
+#include "CapCommand.hpp"
 
 CommandParser::CommandParser()
 {
@@ -33,6 +36,9 @@ CommandParser::CommandParser()
 	_commands["QUIT"] = new QuitCommand();
 	_commands["JOIN"] = new JoinCommand();
 	_commands["PART"] = new PartCommand();
+	_commands["CAP"] = new CapCommand();
+	_commands["WHO"] = new WhoCommand();
+	_commands["WHOIS"] = new WhoisCommand();
 }
 
 CommandParser::~CommandParser()
