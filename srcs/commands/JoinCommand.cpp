@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   JoinCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 12:21:58 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/09 12:15:11 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/09 15:16:38 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,7 @@ void	JoinCommand::exec(Server* server, Client* client, const std::vector<std::st
 				continue;
 			}
 			channel->addMember(client);
-			if (channel->hasMode('i'))
-				channel->removeInvite(client->get_fd());
+			channel->removeInvite(client->get_fd());
 		}
 		std::string	joinMsg = ":" + nick + "!" + client->get_user() + "@" + client->get_ip() + " JOIN :" + channelName + "\r\n";
 		channel->broadcast(joinMsg);

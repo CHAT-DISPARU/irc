@@ -6,7 +6,7 @@
 /*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 13:44:30 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/08 15:31:19 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/09 15:21:24 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	PartCommand::exec(Server* server, Client* client, const std::vector<std::st
 	}
 
 	std::stringstream	channels(args[0]);
-	std::string			reason = (args.size() > 1) ? args[1] : "";
+	std::string			reason = (args.size() > 1) ? (args[1]) : "";
 	std::string			channel;
 	char				del = ',';
 
@@ -47,7 +47,7 @@ void	PartCommand::exec(Server* server, Client* client, const std::vector<std::st
 			}
 			if (channel_tmp->isOperator(client))
 				channel_tmp->removeOperator(client->get_fd());
-			std::string	joinMsg = ":" + client->get_nick() + "!" + client->get_user() + "@" + client->get_ip() + " PART " + channel_tmp->getName() + (reason.empty() ? "" : " :" + reason) + "\r\n";
+			std::string	joinMsg = ":" + client->get_nick() + "!" + client->get_user() + "@" + client->get_ip() + " PART " + channel_tmp->getName() + reason + "\r\n";
 			channel_tmp->broadcast(joinMsg);
 			channel_tmp->removeMember(client->get_fd());
 		}

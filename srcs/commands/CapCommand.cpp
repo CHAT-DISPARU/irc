@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CapCommand.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 18:33:42 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/09 12:14:24 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/09 13:59:51 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 void	CapCommand::exec(Server* server, Client* client, const std::vector<std::string>& args)
 {
+	(void)server;
 	if (args.empty())
 		return;
-
 	std::string msg;
 
 	if (args[0] == "LS")

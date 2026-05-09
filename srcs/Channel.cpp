@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 12:03:05 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/08 19:13:31 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/09 14:44:37 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,4 +201,9 @@ bool	Channel::isEmpty() const
 std::map<int, Client*>	Channel::getMembers() const
 {
 	return _members;
+}
+
+size_t	Channel::get_limit() const
+{
+	return (this->_user_limit);
 }

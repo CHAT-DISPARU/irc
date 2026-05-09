@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:46 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/08 19:07:35 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/09 15:39:18 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <Client.hpp>
 #include <CommandParser.hpp>
 #include <cerrno>
+#include <cstdlib>
 #include <Channel.hpp>
 #define RED "\033[31m"
 #define GREEN "\033[32m"

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParser.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 17:49:49 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/08 19:12:12 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/09 15:30:08 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@
 #include "WhoCommand.hpp"
 #include "WhoisCommand.hpp"
 #include "CapCommand.hpp"
+#include "InviteCommand.hpp"
+#include "ModeCommand.hpp"
+#include "KickCommand.hpp"
 
 CommandParser::CommandParser()
 {
@@ -39,6 +42,9 @@ CommandParser::CommandParser()
 	_commands["CAP"] = new CapCommand();
 	_commands["WHO"] = new WhoCommand();
 	_commands["WHOIS"] = new WhoisCommand();
+	_commands["INVITE"] = new InviteCommand();
+	_commands["KICK"] = new KickCommand();
+	_commands["MODE"] = new ModeCommand();
 }
 
 CommandParser::~CommandParser()

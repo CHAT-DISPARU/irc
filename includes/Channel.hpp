@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 14:15:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/08 18:39:14 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/09 14:53:46 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Channel
 		Channel(std::string name);
 		~Channel();
 
+		size_t						get_limit() const;
 		std::string				getClientList();
 		const std::string&		getName() const;
 		const std::string&		getTopic() const;

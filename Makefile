@@ -24,7 +24,13 @@ SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)$(CMD_DIR)QuitCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PongCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PrivmsgCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)InviteCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)WhoisCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)WhoCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)CapCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PartCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)ModeCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)KickCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)JoinCommand.cpp
 
 
