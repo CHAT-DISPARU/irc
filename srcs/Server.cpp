@@ -6,7 +6,7 @@
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/09 12:16:05 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/10 20:07:20 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,10 +212,7 @@ void	Server::SendData(int fd)
 	ssize_t bytes_sent = send(fd, data.c_str(), data.length(), 0);
 	if (bytes_sent < 0)
 	{
-		// buffer os plein pas grave prochain poll
-		if (errno == EAGAIN || errno == EWOULDBLOCK)
-			return; 
-		std::cerr << "Erreur d'envoi au FD [" << fd << "] -> deconnexion" << std::endl;
+		std::cerr << "Erreur send au FD [" << fd << "] -> deco" << std::endl;
 		disconect_client(fd);
 	} 
 	else if (bytes_sent > 0)

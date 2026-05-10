@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 14:15:00 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/09 14:53:46 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/10 18:22:30 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <Server.hpp>
 
-class Channel
+class	Channel
 {
 	private:
 		std::string					_name;

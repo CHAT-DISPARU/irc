@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandParser.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 17:49:12 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/06 14:12:42 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/10 19:13:02 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ class	CommandParser
 {
 	private:
 		std::map<std::string, ICommand*> _commands;
-
 	public:
 		CommandParser();
 		~CommandParser();
