@@ -6,7 +6,7 @@
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 17:05:27 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/10 18:21:12 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/11 20:16:15 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,41 @@
 #include <iostream>
 #include <exception>
 
-int main(int ac, char **av)
+bool	is_valid_port(const std::string& port_str)
+{
+	if (port_str.empty())
+		return (false);
+
+	for (size_t i = 0; i < port_str.length(); i++)
+	{
+		if (!std::isdigit(port_str[i]))
+			return (false);
+	}
+
+	long	port = std::atol(port_str.c_str());
+	if (port < 1 || port > 65535)
+		return (false);
+	return (true);
+}
+
+int	main(int ac, char **av)
 {
 	if (ac != 3)
 	{
 		std::cerr << "Usage: ./irc <port> <password>" << std::endl;
+		return (1);
+	}
+	std::string	port_str = av[1];
+	std::string	password = av[2];
+
+	if (!is_valid_port(port_str))
+	{
+		std::cerr << "Error: Invalid port  it must be a number between 1 and 65535." << std::endl;
+		return (1);
+	}
+	if (password.empty())
+	{
+		std::cerr << "Error: Password cannot be empty." << std::endl;
 		return (1);
 	}
 	signal(SIGPIPE, SIG_IGN);
@@ -27,9 +57,9 @@ int main(int ac, char **av)
 	signal(SIGQUIT, Server::SignalHandler);
 	try
 	{
-		Server  server;
+		Server	server;
 
-		server.ServerInit(atoi(av[1]), av[2]);
+		server.ServerInit(std::atoi(port_str.c_str()), password);
 		server.run();
 	}
 	catch (const std::exception& e)

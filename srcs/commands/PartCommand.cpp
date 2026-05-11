@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PartCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 13:44:30 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/09 15:21:24 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/11 20:01:18 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,11 @@ void	PartCommand::exec(Server* server, Client* client, const std::vector<std::st
 			}
 			if (channel_tmp->isOperator(client))
 				channel_tmp->removeOperator(client->get_fd());
-			std::string	joinMsg = ":" + client->get_nick() + "!" + client->get_user() + "@" + client->get_ip() + " PART " + channel_tmp->getName() + reason + "\r\n";
+			std::string joinMsg = ":" + client->get_nick() + "!" + client->get_user() + "@" + client->get_ip() + " PART " + channel_tmp->getName() + (reason.empty() ? "" : " " + reason) + "\r\n";
 			channel_tmp->broadcast(joinMsg);
 			channel_tmp->removeMember(client->get_fd());
+			if (channel_tmp->isEmpty())
+				server->removeChannel(channel_tmp->getName());
 		}
 	}
 }

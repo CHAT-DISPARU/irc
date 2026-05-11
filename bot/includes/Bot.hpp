@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 18:18:20 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/11 14:30:44 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/11 21:05:10 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include <sstream>
+#include <fstream>
 
 class	Bot
 {
@@ -54,10 +55,9 @@ class	Bot
 		void	_joinandintroduce(const std::string& channel);
 		void	_Invite_bot(const std::vector<std::string>& args, const std::string& nick);
 		void	_Mode_bot(const std::vector<std::string>& args, const std::string& nick);
-		//reste a faire
-		void	_botCommand(const std::string& cmd, const std::string& nick, const std::string& target);
+		void	_NoSuchNick_bot(const std::vector<std::string>& args, const std::string& nick);
+		void	_botCommand(const std::string& cmd, const std::string& nick, const std::string& target, const std::string& target_user);
 		void	_checkcurse(const std::string& sender, const std::string& channel, const std::string& content);
-		void	_loadCurse();
 
 	public:
 
@@ -65,5 +65,6 @@ class	Bot
 		~Bot();
 
 		void	start();
+		void	loadCurse(const std::string& db_path);
 		void	stop();
 };

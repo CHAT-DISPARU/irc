@@ -41,7 +41,7 @@ void	TopicCommand::exec(Server* server, Client* client, const std::vector<std::s
 		server->sendReply(client->get_fd(), "482", client->get_nick_or_star(), args[0] + " :You're not channel operator");
 		return ;
 	}
-	std::string	joinMsg = ":" + client->get_nick_or_star() + "!" + client->get_user() + "@" + client->get_ip() + " TOPIC :" + topic + "\r\n";
+	std::string joinMsg = ":" + client->get_nick_or_star() + "!" + client->get_user() + "@" + client->get_ip() + " TOPIC " + channelName + " :" + topic + "\r\n";
 	channel->broadcast(joinMsg);
 	channel->setTopic(topic);
 }

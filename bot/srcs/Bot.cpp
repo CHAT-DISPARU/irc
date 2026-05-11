@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 19:38:42 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/11 17:02:38 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/11 21:57:43 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,8 @@ void Bot::_listenLoop()
 		}
 		std::memset(buffer, 0, sizeof(buffer));
 		ssize_t	bytesReceived = recv(_socketFd, buffer, sizeof(buffer) - 1, 0);
-
+		if (bytesReceived == -1)
+			continue;
 		if (bytesReceived == 0)
 		{
 			std::cout << "Server closed." << std::endl;
@@ -132,21 +133,23 @@ void Bot::_listenLoop()
 
 void	Bot::_call_funcs(std::string func, const std::vector<std::string>& args, const std::string& nick)
 {
-	std::string levels[5] = {
+	std::string levels[6] = {
 		"JOIN",
 		"PRIVMSG",
 		"MODE",
 		"INVITE",
-		"352"
+		"352",
+		"401"
 	};
-	void (Bot::*f[5])(const std::vector<std::string>& args, const std::string& nick) = {
+	void (Bot::*f[6])(const std::vector<std::string>& args, const std::string& nick) = {
 		&Bot::_PrivMsg_bot,
 		&Bot::_PrivMsg_bot,
 		&Bot::_Mode_bot,
 		&Bot::_Invite_bot,
-		&Bot::_Who_bot
+		&Bot::_Who_bot,
+		&Bot::_NoSuchNick_bot
 	};
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		if (levels[i] == func)
 			(this->*f[i])(args, nick);
@@ -184,8 +187,12 @@ void	Bot::_processMessage(const std::string& message)
 	if (args.empty())
 		return;
 	std::string cmd = args[1];
+	std::string nick = "";
 	size_t pos = args[0].find('!');
-	std::string	nick = args[0].substr(1, pos - 1);
+	if (pos != std::string::npos && args[0].length() > 1)
+		nick = args[0].substr(1, pos - 1);
+	else
+		nick = args[0].substr(1);
 	args.erase(args.begin());
 	args.erase(args.begin());
 	_call_funcs(cmd, args, nick);
@@ -218,37 +225,43 @@ void	Bot::_sendbonjour_client(const std::string& targetUser)
 }
 
 void	Bot::_PrivMsg_bot(const std::vector<std::string>& args, const std::string& nick)
-{
-	std::string	msg_recv;
-	
-	if (args.empty())
+{	
+	if (args.size() < 2)
 		return ;
-	std::cout << "prv" << args[1] << std::endl;
-	std::string target(args[0]);
-	msg_recv = args[1];
+	std::string	target(args[0]);
+	std::string	msg_recv = args[1];
+
+	if (!target.empty() && (target[0] == '#' || target[0] == '&'))
+		_checkcurse(nick, target, msg_recv);
 	if (msg_recv.substr(0, 1) != "!")
 		return ;
 	msg_recv.erase(0, 1);
 	std::istringstream	iss(msg_recv);
 	std::string			cmd;
+	std::string			tartget_user;
 	iss >> cmd;
-	_botCommand(cmd, nick, target);
+	iss >> tartget_user;
+	_botCommand(cmd, nick, target, tartget_user);
 }
 
-void	Bot::_botCommand(const std::string& cmd, const std::string& nick, const std::string& target)
+void	Bot::_botCommand(const std::string& cmd, const std::string& nick, const std::string& target, const std::string& target_user)
 {
 	if (cmd == "random")
 	{
-		std::srand(NULL);
+		std::srand(time(NULL));
 		int	rand = std::rand() % 101;
 		if (rand != 42)
 		{
-			std::string	msg = "PRIVMSG " + target + " :" + nick + " failed with" + std::to_string(rand);
+			std::stringstream	ss;
+			ss << rand;
+			std::string msg = "PRIVMSG " + target + " :" + nick + " failed with " + ss.str();
 			_sendMessage(msg);
 		}
 		else
 		{
-			std::string	msg = "PRIVMSG " + target + " :" + nick + " won with" + std::to_string(rand);
+			std::stringstream	ss;
+			ss << rand;
+			std::string msg = "PRIVMSG " + target + " :" + nick + " won with " + ss.str();
 			_sendMessage(msg);
 		}
 	}
@@ -257,6 +270,42 @@ void	Bot::_botCommand(const std::string& cmd, const std::string& nick, const std
 		std::string	msg = "PRIVMSG " + target + " :Hi every one the bot " + _nickname + " joined here is a list of the cmd i can do :"
 		+ "\n!help\n"
 		+ "\n!random\n";
+		_sendMessage(msg);
+	}
+	if (cmd == "love")
+	{
+		if (target_user.empty())
+			return ;
+		int percent = std::rand() % 101;
+		std::stringstream	ss;
+		ss << percent;
+		std::string msg = "PRIVMSG " + target + " :" 
+						+ nick + " love ❤️❤️❤️ " + target_user 
+						+ " → " + ss.str() + "%";
+		_sendMessage(msg);
+	}
+	if (cmd == "slap")
+	{
+		if (target_user.empty())
+			return ;
+		std::string msg = "PRIVMSG " + target + " :" 
+					+ nick + " slapped " + target_user + " violently !";
+		_sendMessage(msg);
+	}
+	if (cmd == "answer")
+	{
+		if (target_user.empty())
+			return ;
+		std::vector<std::string> answers;
+		answers.push_back("Yes");
+		answers.push_back("No");
+		answers.push_back("Maybe");
+		answers.push_back("Definitely");
+		answers.push_back("Ask again later");
+		answers.push_back("Wtf never");
+		answers.push_back("100% sure");
+		int r = rand() % answers.size();
+		std::string msg = "PRIVMSG " + target + " :the answer is : " + answers[r];
 		_sendMessage(msg);
 	}
 }
@@ -279,7 +328,10 @@ void	Bot::_joinandintroduce(const std::string& channel)
 {
 	std::string	msg = "PRIVMSG " + channel + " :Hi every one the bot " + _nickname + " joined here is a list of the cmd i can do :"
 		+ "\n!help\n"
-		+ "\n!random\n";
+		+ "\n!random\n"
+		+ "\n!love\n"
+		+ "\n!slap\n"
+		+ "\n!answer\n";
 	_sendMessage(msg);
 }
 
@@ -303,5 +355,69 @@ void	Bot::_Mode_bot(const std::vector<std::string>& args, const std::string& nic
 		std::string	msg = "PRIVMSG " + args[0] + " :i can now ban people if they say a curse word....";
 		_sendMessage(msg);
 		_channelOp[args[0]] = true;
+	}
+}
+
+void	Bot::_NoSuchNick_bot(const std::vector<std::string>& args, const std::string& nick)
+{
+	(void)nick;
+
+	if (args.size() < 2)
+		return ;
+	std::string	bad_nick = args[1];
+	for (std::vector<std::string>::iterator it = _bonjourUsers.begin(); it != _bonjourUsers.end(); )
+	{
+		if (*it == bad_nick)
+		{
+			it = _bonjourUsers.erase(it);
+			std::cout << "Bot cleared nick: " << bad_nick << std::endl;
+		}
+		else
+			++it;
+	}
+}
+
+void	Bot::loadCurse(const std::string& db_path)
+{
+	std::ifstream	file(db_path.c_str());
+	std::string		line;
+
+	if (!file.is_open())
+	{
+		std::cerr << "Erreur : open curse file: " << db_path << std::endl;
+		return ;
+	}
+	while (std::getline(file, line))
+	{
+		if (!line.empty() && line[line.length() - 1] == '\r')
+			line.erase(line.length() - 1);
+		if (!line.empty())
+			_curse.push_back(line);
+	}
+
+	file.close();
+	std::cout << "Bot : " << _curse.size() << " words loaded in db." << std::endl;
+}
+
+void	Bot::_checkcurse(const std::string& sender, const std::string& channel, const std::string& content)
+{
+	if (_curse.empty())
+		return ;
+	for (size_t i = 0; i < _curse.size(); ++i)
+	{
+		if (content.find(_curse[i]) != std::string::npos)
+		{
+			if (_channelOp.find(channel) != _channelOp.end() && _channelOp[channel] == true)
+			{
+				std::string	kickMsg = "KICK " + channel + " " + sender + " :Curse word detected !\r\n";
+				_sendMessage(kickMsg);
+			}
+			else
+			{
+				std::string	kickMsg = "PRIVMSG " + channel + " :Curse word detected but no right to kick ...\r\n";
+				_sendMessage(kickMsg);
+			}
+			break ;
+		}
 	}
 }

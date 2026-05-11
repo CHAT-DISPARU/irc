@@ -6,7 +6,7 @@
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 11:11:50 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/08 19:11:04 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/11 20:05:44 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ void	PrivmsgCommand::exec(Server* server, Client* client, const std::vector<std:
 		if (!channel)
 		{
 			server->sendReply(client->get_fd(), "401", client->get_nick(), target + " :No such nick/channel");
+			return ;
+		}
+		if (!channel->is_inChannel(client))
+		{
+			server->sendReply(client->get_fd(), "404", client->get_nick(), target + " :Cannot send to channel");
 			return ;
 		}
 		channel->broadcast(sender_prefix + " PRIVMSG " + target + " :" + message + "\r\n", client->get_fd());

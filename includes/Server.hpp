@@ -6,7 +6,7 @@
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 15:54:46 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/10 20:06:57 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/11 19:51:36 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <cctype>
 #include <poll.h>
 #include <csignal>
 #include <vector>

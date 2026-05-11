@@ -6,7 +6,7 @@
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/10 20:07:20 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/11 19:56:40 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,22 @@
 
 void	Server::disconect_client(int fd)
 {
+	Client* client_to_disconnect = clients[fd];
+
+	std::vector<Channel*> user_channels = getClientChannels(client_to_disconnect);
+	for (size_t i = 0; i < user_channels.size(); ++i)
+		user_channels[i]->removeMember(fd);
 	close (fd);
 	std::cout << RED << "the client : FD [" << fd << "] disconnected" << RESET << std::endl;
 	delete this->clients[fd];
 	clients.erase(fd);
 	
-	for (std::vector <struct pollfd>::iterator it = pollfd.begin(); it != pollfd.end(); it++)
+	for (size_t i = 0; i < pollfd.size(); i++)
 	{
-		if (it->fd == fd)
+		if (pollfd[i].fd == fd)
 		{
-			pollfd.erase(it);
-			return ;
+			pollfd[i].fd = -1;
+			break ;
 		}
 	}
 }
@@ -143,6 +148,13 @@ void	Server::run(void)
 	std::cout << "Waiting client ..." << std::endl;
 	while (Server::signal == false)
 	{
+		for (std::vector<struct pollfd>::iterator it = pollfd.begin(); it != pollfd.end(); )
+		{
+			if (it->fd == -1)
+				it = pollfd.erase(it);
+			else
+				++it;
+		}
 		for (size_t i = 0; i < pollfd.size(); i++)
 		{
 			if (pollfd[i].fd != fdsocket)
@@ -154,15 +166,39 @@ void	Server::run(void)
 					pollfd[i].events = POLLIN; // que lre
 			}
 		}
-		if (poll(&pollfd[0], pollfd.size(), -1) == -1)
+		int	poll_ret = poll(&pollfd[0], pollfd.size(), 5000);
+		if (poll_ret == -1)
 		{
 			if (Server::signal == false)
 				throw(std::runtime_error("poll() faild"));
 			else
 				return ;
 		}
+		time_t				current_time = time(NULL);
+		std::vector<int>	timeout_clients;
+		
+		for (std::map<int, Client *>::iterator it = clients.begin(); it != clients.end(); it++)
+		{
+			Client*	client = it->second;
+			double	elapsed = difftime(current_time, client->get_last_activity());
+
+			if (elapsed > 120.0)
+			{
+				std::cout << "Timeout for FD [" << client->get_fd() << "]" << std::endl;
+				timeout_clients.push_back(client->get_fd());
+			}
+			else if (elapsed > 60.0 && client->get_ping_sent() == false)
+			{
+				client->add_to_sendBuff("PING :gajanvie.rolavale.irc\r\n");
+				client->set_ping_sent(true);
+			}
+		}
+		for (size_t i = 0; i < timeout_clients.size(); i++)
+			disconect_client(timeout_clients[i]);
 		for (size_t i = 0; i < pollfd.size(); i++)
 		{
+			if (pollfd[i].fd == -1)
+				continue ;
 			if (pollfd[i].revents & POLLIN)
 			{
 				if (pollfd[i].fd == this->fdsocket)
@@ -170,7 +206,7 @@ void	Server::run(void)
 				else
 					ReceiveNewData(pollfd[i].fd);
 			}
-			if (pollfd[i].revents & POLLOUT)
+			if (pollfd[i].fd != -1 && pollfd[i].revents & POLLOUT)
 				SendData(pollfd[i].fd);
 		}
 	}
