@@ -23,7 +23,7 @@ CC := c++
 
 CXXFLAGS := -Wall -Werror -Wextra -std=c++98 -g -I includes
 
-all: banner ${NAME}
+all: ${NAME}
 
 
 $(NAME): $(LIBFT) ${OBJ}

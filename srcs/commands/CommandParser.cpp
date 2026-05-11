@@ -6,7 +6,7 @@
 /*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/05 17:49:49 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/09 15:30:08 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/11 14:28:00 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ CommandParser::CommandParser()
 	_commands["INVITE"] = new InviteCommand();
 	_commands["KICK"] = new KickCommand();
 	_commands["MODE"] = new ModeCommand();
-	_commands["MODE"] = new TopicCommand();
+	_commands["TOPIC"] = new TopicCommand();
 }
 
 CommandParser::~CommandParser()
@@ -67,7 +67,7 @@ void	CommandParser::Parse(Server* server, Client* client, const std::string& mes
 	std::vector<std::string>	args;
 	while (iss >> word)
 	{
-		if (!word.empty() && word[0] == ':')
+		if (!word.empty() && !end_param && word[0] == ':')
 		{
 			word.erase(0, 1);
 			end_param = true;

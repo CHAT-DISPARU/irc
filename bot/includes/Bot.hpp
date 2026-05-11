@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 18:18:20 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/11 00:38:07 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/11 14:30:44 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <cstring>
 #include <cerrno>
 #include <cstdlib>
+#include <sstream>
 
 class	Bot
 {
@@ -33,9 +34,10 @@ class	Bot
 		std::string	_host;
 		int			_port;
 		std::string	_password;
-		std::strsing	_nickname;
+		std::string	_nickname;
 		int			_socketFd;
 		bool		_isRunning;
+		time_t		_last_bonjour;
 		std::vector<std::string>	_bonjourUsers;
 		std::vector<std::string>	_curse;
 		std::map<std::string, bool>	_channelOp;
@@ -44,14 +46,16 @@ class	Bot
 		void	_authenticate();
 		void	_listenLoop();
 		void	_sendMessage(const std::string& message) const;
-		//reste a faire 
+		void	_call_funcs(std::string func, const std::vector<std::string>& args, const std::string& nick);
 		void	_processMessage(const std::string& message);
-		void	_PrivMsg_bot(const std::string& sender, const std::string& target, const std::string& content);
-		void	_Invite_bot(const std::string& sender, const std::string& channel);
-		void	_Who_bot(const std::string& line);
-		void	_Mode_bot(const std::string& line);
+		void	_Who_bot(const std::vector<std::string>& arg, const std::string& nicks);
 		void	_sendbonjour_client(const std::string& targetUser);
+		void	_PrivMsg_bot(const std::vector<std::string>& args, const std::string& nick);
 		void	_joinandintroduce(const std::string& channel);
+		void	_Invite_bot(const std::vector<std::string>& args, const std::string& nick);
+		void	_Mode_bot(const std::vector<std::string>& args, const std::string& nick);
+		//reste a faire
+		void	_botCommand(const std::string& cmd, const std::string& nick, const std::string& target);
 		void	_checkcurse(const std::string& sender, const std::string& channel, const std::string& content);
 		void	_loadCurse();
 

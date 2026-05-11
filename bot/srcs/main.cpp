@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 19:37:40 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/11 00:38:12 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/11 12:30:48 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,26 @@
 
 int main(int ac, char **av)
 {
-    if (ac != 5)
-    {
-        std::cerr << "Usage: ./bot <host> <port> <password> <nickname>" << std::endl;
-        return (1);
-    }
-    std::string	host = av[1];
-    int			port = atoi(av[2]);
-    std::string	password = av[3];
-    std::string	nickname = av[4];
+	if (ac != 5)
+	{
+		std::cerr << "Usage: ./bot <host> <port> <password> <nickname>" << std::endl;
+		return (1);
+	}
+	std::string	host = av[1];
+	int			port = atoi(av[2]);
+	std::string	password = av[3];
+	std::string	nickname = av[4];
 
-    try
-    {
-        Bot ircBot(host, port, password, nickname);
-        ircBot.start();
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << "Bot Error : " << e.what() << std::endl;
-        return (1);
-    }
+	try
+	{
+		Bot ircBot(host, port, password, nickname);
+		ircBot.start();
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Bot Error : " << e.what() << std::endl;
+		return (1);
+	}
 
-    return (0);
+	return (0);
 }
