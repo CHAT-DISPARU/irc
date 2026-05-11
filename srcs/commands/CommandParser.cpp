@@ -27,6 +27,7 @@
 #include "InviteCommand.hpp"
 #include "ModeCommand.hpp"
 #include "KickCommand.hpp"
+#include "TopicCommand.hpp"
 
 CommandParser::CommandParser()
 {
@@ -45,6 +46,7 @@ CommandParser::CommandParser()
 	_commands["INVITE"] = new InviteCommand();
 	_commands["KICK"] = new KickCommand();
 	_commands["MODE"] = new ModeCommand();
+	_commands["MODE"] = new TopicCommand();
 }
 
 CommandParser::~CommandParser()

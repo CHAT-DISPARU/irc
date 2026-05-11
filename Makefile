@@ -31,7 +31,8 @@ SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)$(CMD_DIR)PartCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)ModeCommand.cpp \
 		$(SRCS_DIR)$(CMD_DIR)KickCommand.cpp \
-		$(SRCS_DIR)$(CMD_DIR)JoinCommand.cpp
+		$(SRCS_DIR)$(CMD_DIR)JoinCommand.cpp \
+		$(SRCS_DIR)$(CMD_DIR)TopicCommand.cpp
 
 
 
