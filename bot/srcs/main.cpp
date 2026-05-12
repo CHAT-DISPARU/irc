@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 19:37:40 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/11 20:26:39 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/12 12:59:01 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,9 @@ int	main(int ac, char **av)
 		std::cerr << "Error: Password and nickname cannot be empty." << std::endl;
 		return (1);
 	}
+	signal(SIGPIPE, SIG_IGN);
+	signal(SIGINT, Bot::SignalHandler);
+	signal(SIGQUIT, Bot::SignalHandler);
 	try
 	{
 		Bot	ircBot(host, std::atoi(port_str.c_str()), password, nickname);

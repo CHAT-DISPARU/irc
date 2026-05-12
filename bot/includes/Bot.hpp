@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 18:18:20 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/11 21:05:10 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/12 12:57:36 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ class	Bot
 		int			_socketFd;
 		bool		_isRunning;
 		time_t		_last_bonjour;
+		static bool	signal;
 		std::vector<std::string>	_bonjourUsers;
 		std::vector<std::string>	_curse;
 		std::map<std::string, bool>	_channelOp;
@@ -60,7 +61,7 @@ class	Bot
 		void	_checkcurse(const std::string& sender, const std::string& channel, const std::string& content);
 
 	public:
-
+		static void	SignalHandler(int signum);
 		Bot(const std::string& host, int port, const std::string& password, const std::string& nickname);
 		~Bot();
 

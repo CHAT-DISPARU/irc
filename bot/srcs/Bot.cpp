@@ -6,7 +6,7 @@
 /*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 19:38:42 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/12 12:40:18 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/12 12:58:30 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void Bot::_listenLoop()
 	std::string	dataBuffer = "";
 
 	_last_bonjour = time(NULL);
-	while (_isRunning)
+	while (_isRunning && Bot::signal == false)
 	{
 		if (time(NULL) - _last_bonjour > 60)
 		{
@@ -415,4 +415,12 @@ void	Bot::_checkcurse(const std::string& sender, const std::string& channel, con
 			break ;
 		}
 	}
+}
+
+bool	Bot::signal = false;
+void	Bot::SignalHandler(int signum)
+{
+	(void)signum;
+	std::cout << std::endl << "Signal recv" << std::endl;
+	Bot::signal = true;
 }
