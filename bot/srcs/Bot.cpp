@@ -6,7 +6,7 @@
 /*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 19:38:42 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/12 12:58:30 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/12 15:47:22 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,9 +265,9 @@ void	Bot::_botCommand(const std::string& cmd, const std::string& nick, const std
 			_sendMessage(msg);
 		}
 	}
-	if (cmd == "help")
+	else if (cmd == "help")
 		_joinandintroduce(target);
-	if (cmd == "love")
+	else if (cmd == "love")
 	{
 		if (target_user.empty())
 			return ;
@@ -279,7 +279,7 @@ void	Bot::_botCommand(const std::string& cmd, const std::string& nick, const std
 						+ " → " + ss.str() + "%";
 		_sendMessage(msg);
 	}
-	if (cmd == "slap")
+	else if (cmd == "slap")
 	{
 		if (target_user.empty())
 			return ;
@@ -287,7 +287,7 @@ void	Bot::_botCommand(const std::string& cmd, const std::string& nick, const std
 					+ nick + " slapped " + target_user + " violently !";
 		_sendMessage(msg);
 	}
-	if (cmd == "answer")
+	else if (cmd == "answer")
 	{
 		if (target_user.empty())
 			return ;
@@ -301,6 +301,11 @@ void	Bot::_botCommand(const std::string& cmd, const std::string& nick, const std
 		answers.push_back("100% sure");
 		int r = rand() % answers.size();
 		std::string msg = "PRIVMSG " + target + " :the answer is : " + answers[r];
+		_sendMessage(msg);
+	}
+	else
+	{
+		std::string msg = "PRIVMSG " + target + " :the command : " + cmd + " was not found";
 		_sendMessage(msg);
 	}
 }

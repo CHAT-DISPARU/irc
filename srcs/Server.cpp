@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 16:05:31 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/11 19:56:40 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/12 14:54:51 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ void	Server::disconect_client(int fd)
 
 	std::vector<Channel*> user_channels = getClientChannels(client_to_disconnect);
 	for (size_t i = 0; i < user_channels.size(); ++i)
+	{
 		user_channels[i]->removeMember(fd);
+		if (user_channels[i]->isEmpty())
+			removeChannel(user_channels[i]->getName());
+	}
 	close (fd);
 	std::cout << RED << "the client : FD [" << fd << "] disconnected" << RESET << std::endl;
 	delete this->clients[fd];
