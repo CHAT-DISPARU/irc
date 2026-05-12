@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
+/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 19:38:42 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/11 21:57:43 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/12 12:40:18 by gajanvie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,12 +266,7 @@ void	Bot::_botCommand(const std::string& cmd, const std::string& nick, const std
 		}
 	}
 	if (cmd == "help")
-	{
-		std::string	msg = "PRIVMSG " + target + " :Hi every one the bot " + _nickname + " joined here is a list of the cmd i can do :"
-		+ "\n!help\n"
-		+ "\n!random\n";
-		_sendMessage(msg);
-	}
+		_joinandintroduce(target);
 	if (cmd == "love")
 	{
 		if (target_user.empty())
@@ -409,12 +404,12 @@ void	Bot::_checkcurse(const std::string& sender, const std::string& channel, con
 		{
 			if (_channelOp.find(channel) != _channelOp.end() && _channelOp[channel] == true)
 			{
-				std::string	kickMsg = "KICK " + channel + " " + sender + " :Curse word detected !\r\n";
+				std::string	kickMsg = "KICK " + channel + " " + sender + " :Curse word detected ! : " + _curse[i] + " \r\n";
 				_sendMessage(kickMsg);
 			}
 			else
 			{
-				std::string	kickMsg = "PRIVMSG " + channel + " :Curse word detected but no right to kick ...\r\n";
+				std::string	kickMsg = "PRIVMSG " + channel + " :Curse word detected : " + _curse[i] + " but no right to kick ...\r\n";
 				_sendMessage(kickMsg);
 			}
 			break ;
