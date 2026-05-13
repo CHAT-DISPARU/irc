@@ -35,7 +35,7 @@ SRCS := $(SRCS_DIR)main.cpp \
 		$(SRCS_DIR)$(CMD_DIR)TopicCommand.cpp
 
 
-
+TOTAL_FILES := $(words $(SRCS))
 OBJ := $(patsubst $(SRCS_DIR)%.cpp, $(BUILD_DIR)%.o, $(SRCS))
 
 
@@ -54,18 +54,28 @@ banner :
 	@echo "		$(BLUE) $(PURPLE)░$(BLUE)███  $(PURPLE)░$(BLUE)███    $(PURPLE)░$(BLUE)███ $(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)███     ███$(RESET)"
 	@echo "		$(BLUE) █████ █████   █████ $(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)█████████ $(RESET)"
 	@echo "		$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE) $(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)   $(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)   $(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)$(PURPLE)░$(BLUE)  $(RESET)"
-                                 
-                                 
-                                 
+								 
+								 
+								 
 
 
 $(NAME): $(LIBFT) ${OBJ}
-	@echo "$(TEXT_NEON_GREEN)✅ Compilation of $(NAME) finished !$(RESET)"
+	@echo "\n$(TEXT_NEON_GREEN)✅ Compilation of $(NAME) finished !$(RESET)"
 	@${CC} -o ${NAME} ${OBJ} ${CXXFLAGS}
 
 
 ${BUILD_DIR}%.o: ${SRCS_DIR}%.cpp
 	@mkdir -p $(dir $@)
+	@CUR=$$(find $(BUILD_DIR) -type f -name "*.o" 2>/dev/null | wc -l); \
+	CUR=$$((CUR + 1)); \
+	PERC=$$((CUR * 100 / $(TOTAL_FILES))); \
+	if [ $$PERC -gt 100 ]; then PERC=100; fi; \
+	BAR_LEN=$$(($$PERC / 2)); \
+	EMPTY_LEN=$$((50 - $$BAR_LEN)); \
+	BAR_STR=""; EMPTY_STR=""; \
+	i=0; while [ $$i -lt $$BAR_LEN ]; do BAR_STR="$${BAR_STR}█"; i=$$((i + 1)); done; \
+	i=0; while [ $$i -lt $$EMPTY_LEN ]; do EMPTY_STR="$${EMPTY_STR} "; i=$$((i + 1)); done; \
+	printf "\r\033[K$(BLUE)[$(TEXT_NEON_GREEN)%s$(RESET)$(BLUE)%s]$(RESET) %3d%% (%s)" "$$BAR_STR" "$$EMPTY_STR" "$$PERC" "$<"
 	@${CC} ${CXXFLAGS} -c $< -o $@
 
 clean:

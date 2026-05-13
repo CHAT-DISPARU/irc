@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/10 19:38:42 by CHAT-DISPAR       #+#    #+#             */
-/*   Updated: 2026/05/12 15:47:22 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/13 10:13:41 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ void	Bot::_processMessage(const std::string& message)
 	}
 	if (end_param == true)
 		args.push_back(end_string);
-	if (args.empty())
+	if (args.size() < 2)
 		return;
 	std::string cmd = args[1];
 	std::string nick = "";
@@ -338,23 +338,51 @@ void	Bot::_joinandintroduce(const std::string& channel)
 void	Bot::_Mode_bot(const std::vector<std::string>& args, const std::string& nick)
 {
 	(void)nick;
-	if (args.size() < 3)
+	if (args.size() < 2)
 		return ;
-	if (args[2] != _nickname)
+	std::string	channel = args[0];
+	if (_channelOp.find(channel) == _channelOp.end())
 		return ;
-	if (_channelOp.find(args[0]) == _channelOp.end())
-		return ;
-	if (args[1] == "-o")
+
+	std::string	modestring = args[1];
+	bool		adding = true;
+	size_t		argIdx = 2;
+
+	for (size_t i = 0; i < modestring.size(); i++)
 	{
-		std::string	msg = "PRIVMSG " + args[0] + " :i can no more ban people ....";
-		_sendMessage(msg);
-		_channelOp[args[0]] = false;
-	}
-	else if (args[1] == "+o")
-	{
-		std::string	msg = "PRIVMSG " + args[0] + " :i can now ban people if they say a curse word....";
-		_sendMessage(msg);
-		_channelOp[args[0]] = true;
+		char c = modestring[i];
+
+		if (c == '+')
+		{
+			adding = true;
+			continue;
+		}
+		if (c == '-')
+		{
+			adding = false;
+			continue;
+		}
+
+		if (c == 'o')
+		{
+			if (argIdx >= args.size())
+				continue ;
+			std::string	targetNick = args[argIdx++];
+			if (targetNick != _nickname)
+				continue ;
+			if (adding)
+			{
+				_sendMessage("PRIVMSG " + channel + " :i can now ban people if they say a curse word....");
+				_channelOp[channel] = true;
+			}
+			else
+			{
+				_sendMessage("PRIVMSG " + channel + " :i can no more ban people ....");
+				_channelOp[channel] = false;
+			}
+		}
+		else if ((c == 'k' || c == 'l') && adding && argIdx < args.size())
+			argIdx++;
 	}
 }
 

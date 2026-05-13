@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   KickCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gajanvie <gajanvie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 15:01:33 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/09 16:40:50 by gajanvie         ###   ########.fr       */
+/*   Updated: 2026/05/13 09:59:05 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,9 @@ void	KickCommand::exec(Server* server, Client* client, const std::vector<std::st
 		channel->broadcast(kickMsg);
 		channel->removeMember(targetClient->get_fd());
 		if (channel->isEmpty())
+		{
 			server->removeChannel(channel->getName());
+			break ;
+		}
 	}
 }

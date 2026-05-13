@@ -6,7 +6,7 @@
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 14:19:56 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/11 21:27:53 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/13 10:15:53 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ void	ModeCommand::exec(Server* server, Client* client, const std::vector<std::st
 				modes += "l";
 				modeArgs += ss.str();
 			}
-			server->sendReply(client->get_fd(), "324", nick, target + modes == "+" ? "" : (" " + modes + modeArgs));
-			//a ajouter rpl 329 creation time
+			server->sendReply(client->get_fd(), "324", nick, target + (modes == "+" ? "" : (" " + modes + modeArgs)));
 			server->sendReply(client->get_fd(), "329", nick, target + " :pas fait");
 			return ;
 		}
@@ -68,7 +67,7 @@ void	ModeCommand::exec(Server* server, Client* client, const std::vector<std::st
 		size_t		argIndex = 2;
 		std::string	appliedModes = "";
 		std::string	appliedArgs = "";
-		char		currentSign = '+';
+		char		lastAppliedSign = 0;
 
 		for (size_t i = 0; i < modestring.size(); i++)
 		{
@@ -77,15 +76,14 @@ void	ModeCommand::exec(Server* server, Client* client, const std::vector<std::st
 			if (c == '+')
 			{
 				adding = true;
-				currentSign = '+';
 				continue;
 			}
 			if (c == '-')
 			{
 				adding = false;
-				currentSign = '-';
 				continue;
 			}
+			char currentSign = adding ? '+' : '-';
 			if (c == 'o')
 			{
 				if (argIndex >= args.size())
@@ -101,6 +99,11 @@ void	ModeCommand::exec(Server* server, Client* client, const std::vector<std::st
 					channel->addOperator(targetClient);
 				else
 					channel->removeOperator(targetClient->get_fd());
+				if (lastAppliedSign != currentSign)
+				{
+					appliedModes += currentSign;
+					lastAppliedSign = currentSign;
+				}
 				appliedModes += c;
 				appliedArgs += " " + targetNick;
 			}
@@ -113,6 +116,11 @@ void	ModeCommand::exec(Server* server, Client* client, const std::vector<std::st
 					std::string key = args[argIndex++];
 					channel->setKey(key);
 					channel->setMode('k', true);
+					if (lastAppliedSign != currentSign)
+					{
+						appliedModes += currentSign;
+						lastAppliedSign = currentSign;
+					}
 					appliedModes += c;
 					appliedArgs += " " + key;
 				}
@@ -120,6 +128,11 @@ void	ModeCommand::exec(Server* server, Client* client, const std::vector<std::st
 				{
 					channel->setKey("");
 					channel->setMode('k', false);
+					if (lastAppliedSign != currentSign)
+					{
+						appliedModes += currentSign;
+						lastAppliedSign = currentSign;
+					}
 					appliedModes += c;
 				}
 			}
@@ -134,6 +147,11 @@ void	ModeCommand::exec(Server* server, Client* client, const std::vector<std::st
 						continue;
 					channel->setLimit(limit);
 					channel->setMode('l', true);
+					if (lastAppliedSign != currentSign)
+					{
+						appliedModes += currentSign;
+						lastAppliedSign = currentSign;
+					}
 					appliedModes += c;
 					appliedArgs += " " + args[argIndex - 1];
 				}
@@ -141,12 +159,22 @@ void	ModeCommand::exec(Server* server, Client* client, const std::vector<std::st
 				{
 					channel->setLimit(0);
 					channel->setMode('l', false);
+					if (lastAppliedSign != currentSign)
+					{
+						appliedModes += currentSign;
+						lastAppliedSign = currentSign;
+					}
 					appliedModes += c;
 				}
 			}
 			else if (c == 'i' || c == 't')
 			{
 				channel->setMode(c, adding);
+				if (lastAppliedSign != currentSign)
+				{
+					appliedModes += currentSign;
+					lastAppliedSign = currentSign;
+				}
 				appliedModes += c;
 			}
 			else
@@ -155,7 +183,7 @@ void	ModeCommand::exec(Server* server, Client* client, const std::vector<std::st
 		if (!appliedModes.empty())
 		{
 			std::string modeMsg = ":" + nick + "!" + client->get_user() + "@" + client->get_ip()
-				+ " MODE " + target + " " + currentSign + appliedModes
+				+ " MODE " + target + " " + appliedModes
 				+ appliedArgs + "\r\n";
 			channel->broadcast(modeMsg);
 		}

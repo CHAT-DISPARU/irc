@@ -6,7 +6,7 @@
 /*   By: CHAT-DISPARU <CHAT-DISPARU@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 10:48:11 by gajanvie          #+#    #+#             */
-/*   Updated: 2026/05/11 20:00:01 by CHAT-DISPAR      ###   ########.fr       */
+/*   Updated: 2026/05/13 10:00:10 by CHAT-DISPAR      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	NickCommand::exec(Server* server, Client* client, const std::vector<std::st
 		return;
 	}
 	client->set_nick(args[0]);
-	if (!client->get_user().empty())
+	if (!client->get_user().empty() && !client->is_complete())
 	{
 		client->set_complete(true);
 		server->sendWelcome(client);
